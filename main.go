@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	sOld       string
-	sNew       string
+	oldString  string
+	newString  string
 	origSvg    string
 	copySvg    string
 	pwd        string
@@ -25,7 +25,8 @@ func init() {
 }
 
 func main() {
-	defer ColUn()
+	defer ColorUnset()
+
 	MakeDir(destDir)
 	checkMethod()
 	report()
@@ -37,8 +38,8 @@ func argsAnalyse() {
 		printHelp()
 	}
 
-	flag.StringVar(&sOld, "o", "", "(old) string in svg file to replace")
-	flag.StringVar(&sNew, "n", "", "(new) string in svg file to replace with")
+	flag.StringVar(&oldString, "o", "", "(old) string in svg file to replace")
+	flag.StringVar(&newString, "n", "", "(new) string in svg file to replace with")
 	flag.BoolVar(&doAddNew, "a", false, "add new string if the old one does not exist")
 	flag.BoolVar(&doCopy, "c", false, "Make a copy instead of editing file")
 	flag.BoolVar(&doRcrsv, "r", false, "walk recursively down to the bottom of the directory")
@@ -47,8 +48,8 @@ func argsAnalyse() {
 	flag.Parse()
 
 	args := Filter(os.Args,
-		"-o", sOld,
-		"-n", sNew,
+		"-o", oldString,
+		"-n", newString,
 		"-a",
 		"-c",
 		"-r",
@@ -99,14 +100,14 @@ func argsAnalyseRecursive(args []string) {
 }
 
 func analyseColor() {
-	checkOld := strings.ToLower(sOld)
-	checkNew := strings.ToLower(sNew)
+	checkOld := strings.ToLower(oldString)
+	checkNew := strings.ToLower(newString)
 
 	if IsKeyInMap(MaterialDesign, checkOld) {
-		sOld = MaterialDesign[checkOld]
+		oldString = MaterialDesign[checkOld]
 	}
 	if IsKeyInMap(MaterialDesign, checkNew) {
-		sNew = MaterialDesign[checkNew]
+		newString = MaterialDesign[checkNew]
 	}
 }
 
@@ -122,7 +123,7 @@ func checkMethod() {
 /*func editLollipop() {
 	origDestination := destDir
 	for k, v := range MaterialDesign {
-		sNew = v
+		newString = v
 		destDir = Concat(origDestination, k, v, "/")
 		if doRcrsv {
 			editRecursive()
