@@ -24,6 +24,13 @@ func init() {
 	argsAnalyse()
 }
 
+func main() {
+	defer ColUn()
+	MakeDir(destDir)
+	checkMethod()
+	report()
+}
+
 func argsAnalyse() {
 	switch os.Args[1] {
 	case "h", "-h", "help", "-help", "--help":
@@ -101,13 +108,6 @@ func analyseColor() {
 	if IsKeyInMap(MaterialDesign, checkNew) {
 		sNew = MaterialDesign[checkNew]
 	}
-}
-
-func main() {
-	defer ColUn()
-	MakeDir(destDir)
-	checkMethod()
-	report()
 }
 
 func checkMethod() {
