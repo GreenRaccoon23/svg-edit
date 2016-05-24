@@ -1,0 +1,219 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
+	//"github.com/GreenRaccoon23/googlecolors"
+)
+
+var (
+	doRecursive      bool
+	doMaterialDesign bool
+	doAddNew         bool
+	quiet            bool
+	shutUp           bool
+	oldString        string
+	newString        string
+	origSvg          string
+	copySvg          string
+	pwd              string
+	rootDir          string
+	destDir          string
+	numChanged       int
+	svgFile          *os.File
+)
+
+func init() {
+	pwd, _ = os.Getwd()
+	analyseArgs()
+	GenLog("svg-fill.log")
+}
+
+func analyseArgs() {
+	switch os.Args[1] {
+	case "h", "-h", "help", "-help", "--help":
+		printHelp()
+	}
+
+	flag.StringVar(&oldString, "o", "", "(old) string in svg file to replace")
+	flag.StringVar(&newString, "n", "", "(new) string in svg file to replace with")
+	flag.BoolVar(&doAddNew, "c", false, "create new string if the old one does not exist")
+	flag.BoolVar(&doRecursive, "r", false, "walk recursively down to the bottom of the directory")
+	flag.BoolVar(&quiet, "q", false, "don't list edited files")
+	flag.BoolVar(&shutUp, "Q", false, "don't show any output")
+	flag.BoolVar(&doMaterialDesign, "g", false, "Create a colored copy of the svg file for each color in Google's Material Design color palette")
+	flag.Parse()
+
+	args := Filter(os.Args, "-o", "-n", "-c", "-r", "-q", "-g", "-l")
+	switch {
+	case doRecursive:
+		analyseArgsRecursive(args)
+	case doMaterialDesign:
+		analyseArgsRecursive(args)
+		return
+	default:
+		analyseArgsSingle(args)
+	}
+	analyseColor()
+	return
+}
+
+func analyseArgsSingle(args []string) {
+	numArgs := len(args)
+
+	origSvg = args[numArgs-2]
+	copySvg = args[numArgs-1]
+
+	if strings.Contains(origSvg, ".svg") == false {
+		origSvg = Concat(origSvg, ".svg")
+	}
+	if strings.Contains(copySvg, ".svg") == false {
+		copySvg = Concat(copySvg, ".svg")
+	}
+}
+
+func checkValidArgsSingle() {
+	if IsMatchAny(newString, origSvg, copySvg, "") {
+		printHelp()
+	}
+	if doAddNew {
+		return
+	}
+	if IsMatchAny(oldString, origSvg, copySvg, "") {
+		printHelp()
+	}
+}
+
+func analyseArgsRecursive(args []string) {
+	numArgs := len(args)
+
+	rootDir = args[numArgs-2]
+	rootDir = DirectoryFormat(rootDir)
+
+	destDir = args[numArgs-1]
+	destDir = DirectoryFormat(destDir)
+}
+
+func DirectoryFormat(dir string) (formatted string) {
+	formatted = dir
+
+	if IsFirstLetter(dir, "/", "~") == false {
+		formatted = Concat(pwd, "/", dir)
+	}
+	if IsLastLetter(dir, "/") == false {
+		formatted = Concat(formatted, "/")
+	}
+	if dir == "." {
+		formatted = pwd
+	}
+
+	return
+}
+
+func analyseColor() {
+	checkOld := strings.ToLower(oldString)
+	checkNew := strings.ToLower(newString)
+
+	if IsKeyInMap(MaterialDesign, checkOld) {
+		oldString = MaterialDesign[checkOld]
+	}
+	if IsKeyInMap(MaterialDesign, checkNew) {
+		newString = MaterialDesign[checkNew]
+	}
+}
+
+func main() {
+	defer ColorUnset()
+	defer CloseLog()
+	MakeDir(destDir)
+	checkMethod()
+	report()
+}
+
+func checkMethod() {
+	if doMaterialDesign {
+		editLollipop()
+		Progress("Creating Material Design copies...")
+		return
+	}
+	if doRecursive {
+		Progress("Editing all svg files recursively...")
+		editRecursive()
+		return
+	}
+	editSingle()
+}
+
+func editLollipop() {
+	origDestination := destDir
+	for k, v := range MaterialDesign {
+		newString = v
+		destDir = Concat(origDestination, k, v, "/")
+		if doRecursive {
+			editRecursive()
+		} else {
+			editSingle()
+		}
+	}
+}
+
+func editSingle() {
+	in := origSvg
+	out := copySvg
+	Edit(in, out)
+}
+
+func editRecursive() {
+	err := filepath.Walk(rootDir, WalkReplace)
+	LogErr(err)
+}
+
+func Edit(in string, out string) {
+	content := FileToString(in)
+	edited := replace(content)
+	if edited == "" {
+		return
+	}
+	newFile := CreateFile(out)
+	defer newFile.Close()
+
+	StringToFile(edited, newFile)
+	numChanged += 1
+	Progress(out)
+}
+
+func replace(s string) string {
+	re, replacement := findReplacements(s)
+	if replacement == "" {
+		return ""
+	}
+	return re.ReplaceAllString(s, replacement)
+}
+
+func findReplacements(s string) (re *regexp.Regexp, replacement string) {
+	if doAddNew {
+		re = regexp.MustCompile("(<svg )")
+		replacement = newString
+	}
+
+	if oldString != "" && strings.Contains(s, oldString) {
+		re = regexp.MustCompile(oldString)
+		replacement = newString
+		return
+	}
+	return
+}
+
+func report() {
+	if shutUp {
+		return
+	}
+	if quiet == false {
+		fmt.Println()
+	}
+	fmt.Printf("Edited %d svg images in %v\n", numChanged, destDir)
+}
