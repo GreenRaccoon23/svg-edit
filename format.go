@@ -257,3 +257,7 @@ func pop(slc []string) (string, []string) {
 func cut(slc []string, i int, j int) []string {
 	return append(slc[:i], slc[j:]...)
 }
+
+func shift(slc []string) (string, []string) {
+	return slc[0], slc[1:]
+}
