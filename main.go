@@ -2,17 +2,26 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 var (
-	oldString  string
-	newString  string
+	doRecursive bool
+	doAddNew    bool
+	doCopy      bool
+	doQuiet     bool
+	doShutUp    bool
+
+	oldString string
+	newString string
+
 	origSvg    string
 	copySvg    string
-	pwd        string
+	pwd        string = Pwd()
 	Root       string
 	destDir    string
 	numChanged int
@@ -20,8 +29,27 @@ var (
 )
 
 func init() {
-	pwd = Pwd()
-	argsAnalyse()
+
+	boolFlags := map[string]*bool{
+		"r": &doRecursive,
+		"a": &doAddNew,
+		"c": &doCopy,
+		"q": &doQuiet,
+		"Q": &doShutUp,
+	}
+
+	stringFlags := map[string]*string{
+		"o": &oldString,
+		"n": &newString,
+		"d": &Root,
+	}
+
+	extraArgs := parseArgs(boolFlags, stringFlags)
+	fmt.Println("extraArgs:", extraArgs)
+	// argsAnalyse()
+
+	_printFlags()
+	os.Exit(0)
 }
 
 func main() {
@@ -42,12 +70,12 @@ func argsAnalyse() {
 	flag.StringVar(&newString, "n", "", "(new) string in svg file to replace with")
 	flag.BoolVar(&doAddNew, "a", false, "add new string if the old one does not exist")
 	flag.BoolVar(&doCopy, "c", false, "Make a copy instead of editing file")
-	flag.BoolVar(&doRcrsv, "r", false, "walk recursively down to the bottom of the directory")
+	flag.BoolVar(&doRecursive, "r", false, "walk recursively down to the bottom of the directory")
 	flag.BoolVar(&doQuiet, "q", false, "don't list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "don't show any output")
 	flag.Parse()
 
-	args := Filter(os.Args,
+	args := FilterOut(os.Args,
 		"-o", oldString,
 		"-n", newString,
 		"-a",
@@ -56,13 +84,45 @@ func argsAnalyse() {
 		"-q",
 		"-Q",
 	)
-	switch doRcrsv {
+
+	fmt.Println("args:", args)
+	switch doRecursive {
 	case true:
 		argsAnalyseRecursive(args)
 	case false:
 		argsAnalyseSingle(args)
 	}
 	analyseColor()
+	return
+}
+
+func FilterOut(slc []string, args ...string) (filtered []string) {
+	for _, s := range slc {
+		if !SlcContains(args, s) {
+			filtered = append(filtered, s)
+		}
+	}
+	return
+}
+
+func FilterOut2(slc []string, args ...string) (filtered []string) {
+
+	lenSlc := len(slc)
+	var wg sync.WaitGroup
+	wg.Add(lenSlc)
+
+	for _, s := range slc {
+		go func(s string) {
+			defer wg.Done()
+
+			if !SlcContains(args, s) {
+				filtered = append(filtered, s)
+			}
+		}(s)
+	}
+
+	wg.Wait()
+
 	return
 }
 
@@ -112,7 +172,7 @@ func analyseColor() {
 }
 
 func checkMethod() {
-	if doRcrsv == false {
+	if doRecursive == false {
 		editSingle()
 		return
 	}
@@ -125,7 +185,7 @@ func checkMethod() {
 	for k, v := range MaterialDesign {
 		newString = v
 		destDir = Concat(origDestination, k, v, "/")
-		if doRcrsv {
+		if doRecursive {
 			editRecursive()
 		} else {
 			editSingle()
@@ -142,4 +202,16 @@ func editSingle() {
 func editRecursive() {
 	err := filepath.Walk(Root, WalkReplace)
 	LogErr(err)
+}
+
+func _printFlags() {
+	fmt.Println("r:", "doRecursive:", doRecursive)
+	fmt.Println("a:", "doAddNew:", doAddNew)
+	fmt.Println("c:", "doCopy:", doCopy)
+	fmt.Println("q:", "doQuiet:", doQuiet)
+	fmt.Println("Q:", "doShutUp:", doShutUp)
+
+	fmt.Println("o:", "oldString:", oldString)
+	fmt.Println("n:", "newString:", newString)
+	fmt.Println("d:", "Root:", Root)
 }

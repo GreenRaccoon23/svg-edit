@@ -1,188 +1,110 @@
 package main
 
 import (
-	//"fmt"
 	"os"
-	"regexp"
 	"strings"
 )
 
-var (
-	SOld    string
-	SNew    string
-	Root    string = Pwd()
-	Exclude string
+func parseArgs(boolFlags map[string]*bool, stringFlags map[string]*string) (extraArgs []string) {
 
-	doRcrsv  bool
-	doAddNew bool
-	doCopy   bool
-	doQuiet  bool
-	doShutUp bool
+	if _helpRequested() {
+		printHelp()
+	}
 
-	Targets    []string
-	Trgt       string
-	Exclude    string
-	Exclusions []string
-	doExclude  bool
-	doRegex    bool
-	ReTrgt     *regexp.Regexp
-)
+	a := _argParser{
+		args:        os.Args,
+		boolFlags:   boolFlags,
+		stringFlags: stringFlags,
+	}
 
-func ChkHelp() {
+	extraArgs = a._parseArgs()
+	return
+}
+
+func _helpRequested() bool {
+
 	if len(os.Args) < 2 {
-		return
+		return true
 	}
 
 	switch os.Args[1] {
 	case "-h", "h", "help", "--help", "-H", "H", "HELP", "--HELP", "-help", "--h", "--H":
-		Help()
+		return true
 	}
 
+	return false
 }
 
-func flags() {
-	sFlags := map[string]*string{
-		"o": &SOld,
-		"n": &SNew,
-		"d": &Root,
-		"x": &Exclude,
-	}
-	bFlags := map[string]*bool{
-		"r": &doRcrsv,
-		"a": &doAddNew,
-		"c": &doCopy,
-		"q": &doQuiet,
-		"Q": &doShutUp,
-	}
+type _argParser struct {
+	args   []string
+	_iLast int
 
-	for i, f := range os.Args {
-		if len(f) == 0 {
-			continue
-		}
-		if IsByteLtr(f[0], "-") == false {
-			continue
-		}
+	boolFlags   map[string]*bool
+	stringFlags map[string]*string
+}
 
-		for _, r := range f[1:] {
-			s := string(r)
-			BoolParse(bFlags, s)
-			StrParse(sFlags, i, s)
+func (a *_argParser) _parseArgs() (extraArgs []string) {
+
+	args := a.args
+	iLast := len(args) - 1
+	a._iLast = iLast
+
+	for i := 1; i <= iLast; i++ {
+		arg := args[i]
+
+		if isFlag := a._parseArg(arg, &i); !isFlag {
+			extraArgs = append(extraArgs, arg)
 		}
 	}
 
-	args := FlagFilter(sFlags)
-	Targets = args
-}
-
-func flagsEval() {
-	chkColor()
-	Root = FmtDir(Root)
-	chkExclusions()
-	chkTargets()
-}
-
-func chkExclusions() {
-	if Exclude == "" {
-		return
-	}
-
-	doExclude = true
-	Exclusions = strings.Split(Exclude, ",")
-}
-
-func chkTargets() {
-	n := len(Targets)
-	switch n {
-	case 0:
-		doAll = true
-	case 1:
-		Trgt = Targets[0]
-		chkRegex(Trgt)
-	default:
-		Trgt = Targets[0]
-	}
-}
-
-func chkRegex(t string) {
-	switch t {
-	case "*", ".":
-		doAll = true
-		return
-	}
-
-	if IsDir(t) {
-		doRcrsv = true
-		return
-	}
-
-	if strings.Contains(t, "*") {
-		doRegex = true
-		var err error
-		ReTrgt, err = regexp.Compile(t)
-		LogErr(err)
-		return
-	}
-}
-
-func chkColor() {
-	o := strings.ToLower(SOld)
-	n := strings.ToLower(SNew)
-
-	if IsKeyInMap(MaterialDesign, o) {
-		SOld = MaterialDesign[o]
-	}
-	if IsKeyInMap(MaterialDesign, n) {
-		SNew = MaterialDesign[n]
-	}
-}
-
-func BoolParse(m map[string]*bool, f string) {
-	for s, b := range m {
-		if s != f {
-			continue
-		}
-		*b = true
-	}
-}
-
-func StrParse(m map[string]*string, i int, f string) {
-	for s, t := range m {
-		if s != f {
-			continue
-		}
-		*t = ArgNext(i)
-	}
-}
-
-func ArgNext(i int) string {
-	if len(os.Args) <= i {
-		Help()
-	}
-	return os.Args[i+1]
-}
-
-func FlagFilter(m map[string]*string) (filtered []string) {
-	if len(os.Args) < 2 {
-		return
-	}
-
-	strFlags := StrFlags(m)
-
-	for _, a := range os.Args[1:] {
-		if IsFirstLtr(a, "-") {
-			continue
-		}
-		if SlcContains(strFlags, a) {
-			continue
-		}
-		filtered = append(filtered, a)
-	}
 	return
 }
 
-func StrFlags(m map[string]*string) (slc []string) {
-	for _, v := range m {
-		slc = append(slc, *v)
+func (a *_argParser) _parseArg(arg string, i *int) bool {
+
+	if beginsWithHyphen := (string(arg[0]) == "-"); !beginsWithHyphen {
+		return false
 	}
+
+	argTrimmed := strings.TrimLeft(arg, "-")
+
+	if hasBoolFlags := a._checkBoolFlags(argTrimmed); hasBoolFlags {
+		return true
+	}
+
+	if isLastArg := (*i == a._iLast); isLastArg {
+		return false
+	}
+
+	if isStringFlag := a._checkStringFlags(argTrimmed, i); isStringFlag {
+		return true
+	}
+
+	return false
+}
+
+func (a *_argParser) _checkBoolFlags(argTrimmed string) (hasBoolFlags bool) {
+
+	iEnd := len(argTrimmed) - 1
+	for i := 0; i <= iEnd; i++ {
+		c := string(argTrimmed[i])
+
+		if isBoolFlag := (a.boolFlags[c] != nil); isBoolFlag {
+			*(a.boolFlags[c]) = true
+			hasBoolFlags = true
+		}
+	}
+
+	return
+}
+
+func (a *_argParser) _checkStringFlags(argTrimmed string, i *int) (isStringFlag bool) {
+
+	if isStringFlag = (a.stringFlags[argTrimmed] != nil); isStringFlag {
+		*i++
+		nextArg := a.args[*i]
+		*(a.stringFlags[argTrimmed]) = nextArg
+	}
+
 	return
 }
