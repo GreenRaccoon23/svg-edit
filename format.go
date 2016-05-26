@@ -42,7 +42,7 @@ func Filter(slc []string, args ...string) (filtered []string) {
 		if s == "" {
 			continue
 		}
-		if SliceContains(sediment, s) {
+		if SlcContains(sediment, s) {
 			continue
 		}
 		filtered = append(filtered, s)
@@ -55,7 +55,7 @@ func Strain(slc []string, args ...string) (sediment []string) {
 		if s == "" {
 			continue
 		}
-		if SliceContains(slc, s) == false {
+		if SlcContains(slc, s) == false {
 			continue
 		}
 		sediment = append(sediment, s)
@@ -63,15 +63,21 @@ func Strain(slc []string, args ...string) (sediment []string) {
 	return
 }
 
-func SliceContains(slc []string, args ...string) bool {
+func SlcContainsLoose(slc []string, args ...string) bool {
 	for _, s := range slc {
-		if s == "" {
-			continue
-		}
 		for _, a := range args {
-			if a == "" {
-				continue
+			//if s == a {
+			if strings.Contains(s, a) {
+				return true
 			}
+		}
+	}
+	return false
+}
+
+func SlcContains(slc []string, args ...string) bool {
+	for _, s := range slc {
+		for _, a := range args {
 			//if s == a {
 			if strings.Contains(s, a) {
 				return true
@@ -241,4 +247,9 @@ func findReplacements(s string) (re *regexp.Regexp, replacement string) {
 	re = regexp.MustCompile(oldString)
 	replacement = newString
 	return
+}
+
+func pop(slc []string) (string, []string) {
+	iEnd := len(slc) - 1
+	return slc[iEnd], slc[:iEnd]
 }
