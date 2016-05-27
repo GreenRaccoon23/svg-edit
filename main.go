@@ -158,15 +158,17 @@ func _formatGlobalVars() {
 // }
 
 func analyseColor() {
-	checkOld := strings.ToLower(OldString)
-	checkNew := strings.ToLower(NewString)
 
-	if MaterialDesign[checkOld] != nil {
-		OldString = MaterialDesign[checkOld]
+	oldString := strings.ToLower(OldString)
+	if MaterialDesign[oldString] != nil {
+		OldString = MaterialDesign[oldString]
 	}
-	if MaterialDesign[checkOld] != nil {
-		NewString = MaterialDesign[checkNew]
+
+	newString := strings.ToLower(NewString)
+	if MaterialDesign[oldString] != nil {
+		NewString = MaterialDesign[newString]
 	}
+
 }
 
 func checkMethod() {
