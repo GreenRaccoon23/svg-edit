@@ -135,7 +135,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 		return err
 	}
 
-	TotalEdited += 1
+	TotalEdited++
 	Progress(dstPath)
 
 	return nil
