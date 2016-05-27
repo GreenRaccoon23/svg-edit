@@ -89,9 +89,7 @@ func fmtDst(path string) (dstPath string) {
 
 func replace(s string) (replaced string) {
 	re, replacement := _findReplacements(s)
-	if replacement == "" {
-		return
-	}
+
 	replaced = re.ReplaceAllString(s, replacement)
 	return
 }
