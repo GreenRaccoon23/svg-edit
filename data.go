@@ -80,7 +80,7 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 	_genDest(dst)
 
 	if _isSymlink(file) {
-		_copy(src, dst)
+		_copyFromPath(src, dst)
 		return nil
 	}
 	editFileFromPath(src, dst)
@@ -99,7 +99,7 @@ func _genDest(path string) {
 func editFileFromPath(src string, dst string) {
 	content, err := _fileToString(src)
 	if err != nil {
-		_copy(src, dst)
+		_copyFromPath(src, dst)
 		return
 	}
 
@@ -140,7 +140,7 @@ func _stringToFile(s string, file *os.File) {
 	LogErr(err)
 }
 
-func _copy(srcPath, dstPath string) {
+func _copyFromPath(srcPath string, dstPath string) {
 
 	if dstPath == srcPath {
 		return
@@ -160,14 +160,17 @@ func _copy(srcPath, dstPath string) {
 	}
 	defer dst.Close()
 
-	_, err = io.Copy(dst, src)
+	err = _copyFile(dst, src)
+	LogErr(err)
+}
+
+func _copyFile(dst *os.File, src *os.File) error {
+	_, err := io.Copy(dst, src)
 	if err != nil {
-		Log(err)
-		return
+		return err
 	}
 
-	err = dst.Sync()
-	LogErr(err)
+	return dst.Sync()
 }
 
 /*func Copy(srcPath, dstPath string) error {
