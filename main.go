@@ -107,7 +107,7 @@ func _edit() {
 
 	case true:
 		Progress("Editing all svg files recursively...")
-		err := filepath.Walk(SrcDir, WalkReplace)
+		err := filepath.Walk(SrcDir, walkReplace)
 		LogErr(err)
 
 	case false:

@@ -67,7 +67,7 @@ func mkDir(dir string) {
 	}
 }
 
-func WalkReplace(path string, file os.FileInfo, err error) error {
+func walkReplace(path string, file os.FileInfo, err error) error {
 	ext := filepath.Ext(path)
 	if ext != ".svg" {
 		return nil
