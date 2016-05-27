@@ -79,7 +79,7 @@ func Create(fileName string) (file *os.File) {
 	return
 }
 
-func MakeDir(dir string) {
+func mkDir(dir string) {
 	if _, err := os.Stat(dir); err != nil {
 		err := os.MkdirAll(dir, 0777)
 		LogErr(err)
@@ -112,7 +112,7 @@ func WalkReplace(path string, file os.FileInfo, err error) error {
 
 func genDest(path string) {
 	dir := filepath.Dir(path)
-	MakeDir(dir)
+	mkDir(dir)
 	return
 }
 

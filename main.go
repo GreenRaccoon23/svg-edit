@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/fatih/color"
 )
@@ -64,7 +63,7 @@ func init() {
 func main() {
 	defer color.Unset()
 
-	MakeDir(DstDir)
+	mkDir(DstDir)
 	checkMethod()
 	report()
 }
@@ -105,7 +104,7 @@ func argsAnalyse() {
 	flag.BoolVar(&DoShutUp, "Q", false, "don't show any output")
 	flag.Parse()
 
-	args := FilterOut(os.Args,
+	args := Filter(os.Args,
 		"-o", OldString,
 		"-n", NewString,
 		"-a",
@@ -123,36 +122,6 @@ func argsAnalyse() {
 		argsAnalyseSingle(args)
 	}
 	analyseColor()
-	return
-}
-
-func FilterOut(slc []string, args ...string) (filtered []string) {
-	for _, s := range slc {
-		if !SlcContains(args, s) {
-			filtered = append(filtered, s)
-		}
-	}
-	return
-}
-
-func FilterOut2(slc []string, args ...string) (filtered []string) {
-
-	lenSlc := len(slc)
-	var wg sync.WaitGroup
-	wg.Add(lenSlc)
-
-	for _, s := range slc {
-		go func(s string) {
-			defer wg.Done()
-
-			if !SlcContains(args, s) {
-				filtered = append(filtered, s)
-			}
-		}(s)
-	}
-
-	wg.Wait()
-
 	return
 }
 
