@@ -21,8 +21,8 @@ var (
 	oldString string
 	newString string
 
-	originalFileOrDir string
-	newFileOrDir      string
+	srcFileOrDir string
+	dstFileOrDir string
 
 	origSvg    string
 	copySvg    string
@@ -50,11 +50,12 @@ func init() {
 	}
 
 	noFlagVars := []*string{
-		&originalFileOrDir,
-		&newFileOrDir,
+		&srcFileOrDir,
+		&dstFileOrDir,
 	}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+	_formatGlobalVars()
 	// argsAnalyse()
 
 	_printFlags()
@@ -67,6 +68,27 @@ func main() {
 	MakeDir(destDir)
 	checkMethod()
 	report()
+}
+
+func _formatGlobalVars() {
+
+	if dstFileOrDir == "" {
+		dstFileOrDir = srcFileOrDir
+	}
+
+	switch doRecursive {
+
+	case true:
+		Root = FmtDir(srcFileOrDir)
+		destDir = FmtDir(dstFileOrDir)
+
+	case false:
+		origSvg = FmtSvg(srcFileOrDir)
+		copySvg = FmtSvg(dstFileOrDir)
+
+		Root = filepath.Dir(origSvg)
+		destDir = filepath.Dir(copySvg)
+	}
 }
 
 func argsAnalyse() {
@@ -224,6 +246,6 @@ func _printFlags() {
 	fmt.Println("n:", "newString:", newString)
 	fmt.Println("d:", "Root:", Root)
 
-	fmt.Println("_:", "originalFileOrDir:", originalFileOrDir)
-	fmt.Println("_:", "newFileOrDir:", newFileOrDir)
+	fmt.Println("_:", "srcFileOrDir:", srcFileOrDir)
+	fmt.Println("_:", "dstFileOrDir:", dstFileOrDir)
 }
