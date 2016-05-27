@@ -193,7 +193,7 @@ func FmtSvg(svg string) string {
 		return ""
 	}
 
-	trimmedExt := strings.trimSuffix(svg, ".svg")
+	trimmedExt := strings.TrimSuffix(svg, ".svg")
 	if hasExt := (trimmedExt != svg); hasExt {
 		return svg
 	}
