@@ -87,15 +87,15 @@ func fmtDst(path string) (dstPath string) {
 	return
 }
 
-func replace(s string) (replaced string) {
-	re, replacement := _getFindAndReplace(s)
+func replace(fileContent string) (replaced string) {
+	re, replacement := _getFindAndReplace(fileContent)
 
-	replaced = re.ReplaceAllString(s, replacement)
+	replaced = re.ReplaceAllString(fileContent, replacement)
 	return
 }
 
-func _getFindAndReplace(s string) (re *regexp.Regexp, replacement string) {
-	if DoAddNew && !strings.Contains(s, ToFind) {
+func _getFindAndReplace(fileContent string) (re *regexp.Regexp, replacement string) {
+	if DoAddNew && !strings.Contains(fileContent, ToFind) {
 		re = ReAddNew
 		replacement = concat(`${1}fill="`, ToReplace, `" `)
 		return

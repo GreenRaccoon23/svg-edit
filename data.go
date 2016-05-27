@@ -118,13 +118,13 @@ func _mkDstDir(path string) error {
 
 func editFileFromPath(dstPath string, srcPath string) error {
 
-	content, err := _fileToString(srcPath)
+	fileContent, err := _fileToString(srcPath)
 	if err != nil {
 		return _copyFromPath(dstPath, srcPath)
 	}
 
-	edited := replace(content)
-	if edited == "" {
+	editedFileContent := replace(fileContent)
+	if editedFileContent == "" {
 		return nil
 	}
 
@@ -134,7 +134,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 	defer newFile.Close()
 
-	if err = _stringToFile(edited, newFile); err != nil {
+	if err = _stringToFile(editedFileContent, newFile); err != nil {
 		return err
 	}
 
