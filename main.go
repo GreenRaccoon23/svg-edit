@@ -90,8 +90,8 @@ func _setSrcDst() {
 	switch DoRecursive {
 
 	case true:
-		SrcDir = FmtDir(SrcFileOrDir)
-		DstDir = FmtDir(DstFileOrDir)
+		SrcDir = fmtDir(SrcFileOrDir)
+		DstDir = fmtDir(DstFileOrDir)
 
 	case false:
 		SrcSvg = FmtSvg(SrcFileOrDir)
@@ -194,8 +194,8 @@ func editt() {
 // 	}
 // 	dest := args[numArgs-1]
 
-// 	SrcDir = FmtDir(root)
-// 	DstDir = FmtDir(dest)
+// 	SrcDir = fmtDir(root)
+// 	DstDir = fmtDir(dest)
 // }
 
 func _printFlags() {

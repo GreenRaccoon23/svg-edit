@@ -183,7 +183,7 @@ func FmtSvg(svg string) string {
 	return concat(svg, ".svg")
 }
 
-func FmtDir(dir string) string {
+func fmtDir(dir string) string {
 
 	if dir == "" {
 		return ""
