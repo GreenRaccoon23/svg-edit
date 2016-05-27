@@ -81,9 +81,9 @@ func fmtCopy(s string) string {
 	return concat(s, "-copy.svg")
 }
 
-func fmtDst(path string) (out string) {
-	out = strings.Replace(path, SrcDir, DstDir, 1)
-	out = strings.Replace(out, "//", "/", -1)
+func fmtDst(path string) (dstPath string) {
+	dstPath = strings.Replace(path, SrcDir, DstDir, 1)
+	dstPath = strings.Replace(dstPath, "//", "/", -1)
 	return
 }
 
