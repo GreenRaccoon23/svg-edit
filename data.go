@@ -60,11 +60,6 @@ func LogErr(err error) {
 	Log(err)
 }
 
-func IsStringSymlink(filename string) bool {
-	file, _ := os.Lstat(filename)
-	return IsSymlink(file)
-}
-
 func IsSymlink(file os.FileInfo) bool {
 	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
 		return true
@@ -72,23 +67,10 @@ func IsSymlink(file os.FileInfo) bool {
 	return false
 }
 
-func Create(fileName string) (file *os.File) {
-	var err error
-	file, err = os.Create(fileName)
-	LogErr(err)
-	return
-}
-
 func mkDir(dir string) {
 	if _, err := os.Stat(dir); err != nil {
 		err := os.MkdirAll(dir, 0777)
 		LogErr(err)
-	}
-}
-
-func RemoveIfExists(fileName string) {
-	if _, err := os.Stat(fileName); err == nil {
-		os.Remove(fileName)
 	}
 }
 
