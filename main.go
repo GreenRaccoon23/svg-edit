@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -64,8 +63,8 @@ func init() {
 
 	_verifyGlobalVars()
 
-	_printFlags()
-	os.Exit(0)
+	// _printFlags()
+	// os.Exit(0)
 }
 
 func main() {
