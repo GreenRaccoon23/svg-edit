@@ -94,7 +94,6 @@ func _isSymlink(file os.FileInfo) bool {
 func _genDest(path string) {
 	dir := filepath.Dir(path)
 	mkDir(dir)
-	return
 }
 
 func editFileFromPath(src string, dst string) {
