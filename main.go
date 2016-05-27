@@ -16,8 +16,8 @@ var (
 	DoQuiet     bool
 	DoShutUp    bool
 
-	OldString string
-	NewString string
+	ToFind    string
+	ToReplace string
 
 	SrcFileOrDir string
 	DstFileOrDir string
@@ -41,8 +41,8 @@ func init() {
 	}
 
 	stringFlagVars := map[string]*string{
-		"o": &OldString,
-		"n": &NewString,
+		"o": &ToFind,
+		"n": &ToReplace,
 		"d": &SrcDir,
 	}
 
@@ -69,6 +69,11 @@ func main() {
 
 func _formatGlobalVars() {
 
+	_setSrcDst()
+}
+
+func _setSrcDst() {
+
 	if DstFileOrDir == "" {
 		DstFileOrDir = SrcFileOrDir
 	}
@@ -94,8 +99,8 @@ func _formatGlobalVars() {
 // 		printHelp()
 // 	}
 
-// 	flag.StringVar(&OldString, "o", "", "(old) string in svg file to replace")
-// 	flag.StringVar(&NewString, "n", "", "(new) string in svg file to replace with")
+// 	flag.StringVar(&ToFind, "o", "", "(old) string in svg file to replace")
+// 	flag.StringVar(&ToReplace, "n", "", "(new) string in svg file to replace with")
 // 	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
 // 	flag.BoolVar(&DoCopy, "c", false, "Make a copy instead of editing file")
 // 	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
@@ -104,8 +109,8 @@ func _formatGlobalVars() {
 // 	flag.Parse()
 
 // 	args := Filter(os.Args,
-// 		"-o", OldString,
-// 		"-n", NewString,
+// 		"-o", ToFind,
+// 		"-n", ToReplace,
 // 		"-a",
 // 		"-c",
 // 		"-r",
@@ -120,7 +125,7 @@ func _formatGlobalVars() {
 // 	case false:
 // 		argsAnalyseSingle(args)
 // 	}
-// 	analyseColor()
+// 	setFindReplace()
 // 	return
 // }
 
@@ -157,16 +162,16 @@ func _formatGlobalVars() {
 // 	DstDir = FmtDir(dest)
 // }
 
-func analyseColor() {
+func setFindReplace() {
 
-	oldString := strings.ToLower(OldString)
+	oldString := strings.ToLower(ToFind)
 	if MaterialDesign[oldString] != nil {
-		OldString = MaterialDesign[oldString]
+		ToFind = MaterialDesign[oldString]
 	}
 
-	newString := strings.ToLower(NewString)
+	newString := strings.ToLower(ToReplace)
 	if MaterialDesign[oldString] != nil {
-		NewString = MaterialDesign[newString]
+		ToReplace = MaterialDesign[newString]
 	}
 
 }
@@ -183,7 +188,7 @@ func checkMethod() {
 /*func editLollipop() {
 	origDestination := DstDir
 	for k, v := range MaterialDesign {
-		NewString = v
+		ToReplace = v
 		DstDir = Concat(origDestination, k, v, "/")
 		if DoRecursive {
 			editRecursive()
@@ -211,8 +216,8 @@ func _printFlags() {
 	fmt.Println("q:", "DoQuiet:", DoQuiet)
 	fmt.Println("Q:", "DoShutUp:", DoShutUp)
 
-	fmt.Println("o:", "OldString:", OldString)
-	fmt.Println("n:", "NewString:", NewString)
+	fmt.Println("o:", "ToFind:", ToFind)
+	fmt.Println("n:", "ToReplace:", ToReplace)
 	fmt.Println("d:", "SrcDir:", SrcDir)
 
 	fmt.Println("_:", "SrcFileOrDir:", SrcFileOrDir)

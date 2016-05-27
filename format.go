@@ -230,18 +230,18 @@ func replace(s string) (replaced string) {
 }
 
 func findReplacements(s string) (re *regexp.Regexp, replacement string) {
-	if DoAddNew && !strings.Contains(s, OldString) {
+	if DoAddNew && !strings.Contains(s, ToFind) {
 		re = regexp.MustCompile("(<svg )")
-		replacement = Concat(`${1}fill="`, NewString, `" `)
+		replacement = Concat(`${1}fill="`, ToReplace, `" `)
 		return
 	}
 
-	if OldString == "" {
+	if ToFind == "" {
 		return
 	}
 
-	re = regexp.MustCompile(OldString)
-	replacement = NewString
+	re = regexp.MustCompile(ToFind)
+	replacement = ToReplace
 	return
 }
 
