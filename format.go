@@ -10,21 +10,13 @@ var (
 	buffer bytes.Buffer
 )
 
-func Str(slice []string) (concatenated string) {
-	for _, s := range slice {
+func concat(args ...string) (concatenated string) {
+	for _, s := range args {
 		buffer.WriteString(s)
 	}
 	concatenated = buffer.String()
 	buffer.Reset()
 	return
-}
-
-func Slc(args ...string) []string {
-	return args
-}
-
-func concat(args ...string) string {
-	return Str(args)
 }
 
 func FmtSvg(svg string) string {
