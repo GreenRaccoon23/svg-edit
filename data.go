@@ -99,7 +99,7 @@ func _genDest(path string) {
 }
 
 func editFileFromPath(in string, out string) {
-	content, err := fileToString(in)
+	content, err := _fileToString(in)
 	if err != nil {
 		_copy(in, out)
 		return
@@ -117,12 +117,12 @@ func editFileFromPath(in string, out string) {
 	}
 	defer newFile.Close()
 
-	stringToFile(edited, newFile)
+	_stringToFile(edited, newFile)
 	TotalEdited += 1
 	Progress(out)
 }
 
-func fileToString(fileName string) (fileString string, err error) {
+func _fileToString(fileName string) (fileString string, err error) {
 	var file []byte
 	file, err = ioutil.ReadFile(fileName)
 	if err != nil {
@@ -133,7 +133,7 @@ func fileToString(fileName string) (fileString string, err error) {
 	return
 }
 
-func stringToFile(s string, file *os.File) {
+func _stringToFile(s string, file *os.File) {
 	b := []byte(s)
 	_, err := file.Write(b)
 	LogErr(err)
