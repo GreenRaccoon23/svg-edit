@@ -27,20 +27,20 @@ func concat(args ...string) string {
 	return Str(args)
 }
 
-func IsFirstLetter(s string, args ...string) bool {
-	firstLetter := string(s[0])
+func isFirstChar(s string, args ...string) bool {
+	firstChar := string(s[0])
 	for _, a := range args {
-		if firstLetter == a {
+		if firstChar == a {
 			return true
 		}
 	}
 	return false
 }
 
-func IsLastLetter(s string, args ...string) bool {
-	lastLetter := string(s[len(s)-1])
+func isLastChar(s string, args ...string) bool {
+	lastChar := string(s[len(s)-1])
 	for _, z := range args {
-		if lastLetter == z {
+		if lastChar == z {
 			return true
 		}
 	}
@@ -70,11 +70,11 @@ func fmtDir(dir string) string {
 	//Pwd := getPwd()
 	formatted := dir
 
-	if IsFirstLetter(dir, "/", "~") == false {
+	if isFirstChar(dir, "/", "~") == false {
 		formatted = concat(Pwd, "/", dir)
 	}
 
-	if IsLastLetter(dir, "/") == false {
+	if isLastChar(dir, "/") == false {
 		formatted = concat(formatted, "/")
 	}
 
