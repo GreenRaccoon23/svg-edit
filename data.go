@@ -65,9 +65,9 @@ func LogErr(err error) {
 
 func mkDir(dir string) error {
 	if _pathExists(dir) {
-		err := os.MkdirAll(dir, 0777)
-		LogErr(err)
+		return nil
 	}
+	return os.MkdirAll(dir, 0777)
 }
 
 func _pathExists(path string) bool {
