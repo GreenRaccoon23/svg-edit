@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -89,74 +88,74 @@ func _formatGlobalVars() {
 	}
 }
 
-func argsAnalyse() {
-	switch os.Args[1] {
-	case "h", "-h", "help", "-help", "--help":
-		printHelp()
-	}
+// func argsAnalyse() {
+// 	switch os.Args[1] {
+// 	case "h", "-h", "help", "-help", "--help":
+// 		printHelp()
+// 	}
 
-	flag.StringVar(&OldString, "o", "", "(old) string in svg file to replace")
-	flag.StringVar(&NewString, "n", "", "(new) string in svg file to replace with")
-	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
-	flag.BoolVar(&DoCopy, "c", false, "Make a copy instead of editing file")
-	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
-	flag.BoolVar(&DoQuiet, "q", false, "don't list edited files")
-	flag.BoolVar(&DoShutUp, "Q", false, "don't show any output")
-	flag.Parse()
+// 	flag.StringVar(&OldString, "o", "", "(old) string in svg file to replace")
+// 	flag.StringVar(&NewString, "n", "", "(new) string in svg file to replace with")
+// 	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
+// 	flag.BoolVar(&DoCopy, "c", false, "Make a copy instead of editing file")
+// 	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
+// 	flag.BoolVar(&DoQuiet, "q", false, "don't list edited files")
+// 	flag.BoolVar(&DoShutUp, "Q", false, "don't show any output")
+// 	flag.Parse()
 
-	args := Filter(os.Args,
-		"-o", OldString,
-		"-n", NewString,
-		"-a",
-		"-c",
-		"-r",
-		"-q",
-		"-Q",
-	)
+// 	args := Filter(os.Args,
+// 		"-o", OldString,
+// 		"-n", NewString,
+// 		"-a",
+// 		"-c",
+// 		"-r",
+// 		"-q",
+// 		"-Q",
+// 	)
 
-	fmt.Println("args:", args)
-	switch DoRecursive {
-	case true:
-		argsAnalyseRecursive(args)
-	case false:
-		argsAnalyseSingle(args)
-	}
-	analyseColor()
-	return
-}
+// 	fmt.Println("args:", args)
+// 	switch DoRecursive {
+// 	case true:
+// 		argsAnalyseRecursive(args)
+// 	case false:
+// 		argsAnalyseSingle(args)
+// 	}
+// 	analyseColor()
+// 	return
+// }
 
-func argsAnalyseSingle(args []string) {
-	numArgs := len(args)
+// func argsAnalyseSingle(args []string) {
+// 	numArgs := len(args)
 
-	o := args[numArgs-1]
-	c := o
-	if DoCopy && numArgs > 2 {
-		o = args[numArgs-2]
-		c = args[numArgs-1]
-	}
-	if DoCopy && numArgs < 3 {
-		o = args[numArgs-1]
-		c = fmtCopy(o)
-	}
+// 	o := args[numArgs-1]
+// 	c := o
+// 	if DoCopy && numArgs > 2 {
+// 		o = args[numArgs-2]
+// 		c = args[numArgs-1]
+// 	}
+// 	if DoCopy && numArgs < 3 {
+// 		o = args[numArgs-1]
+// 		c = fmtCopy(o)
+// 	}
 
-	SrcSvg = FmtSvg(o)
-	DstSvg = FmtSvg(c)
-	SrcDir = filepath.Dir(SrcSvg)
-	DstDir = filepath.Dir(DstSvg)
-}
+// 	SrcSvg = FmtSvg(o)
+// 	DstSvg = FmtSvg(c)
+// 	SrcDir = filepath.Dir(SrcSvg)
+// 	DstDir = filepath.Dir(DstSvg)
+// }
 
-func argsAnalyseRecursive(args []string) {
-	numArgs := len(args)
+// func argsAnalyseRecursive(args []string) {
+// 	numArgs := len(args)
 
-	root := args[numArgs-2]
-	if numArgs < 3 {
-		root = Pwd
-	}
-	dest := args[numArgs-1]
+// 	root := args[numArgs-2]
+// 	if numArgs < 3 {
+// 		root = Pwd
+// 	}
+// 	dest := args[numArgs-1]
 
-	SrcDir = FmtDir(root)
-	DstDir = FmtDir(dest)
-}
+// 	SrcDir = FmtDir(root)
+// 	DstDir = FmtDir(dest)
+// }
 
 func analyseColor() {
 	checkOld := strings.ToLower(OldString)
