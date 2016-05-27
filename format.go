@@ -255,7 +255,22 @@ func pop(slc []string) (string, []string) {
 }
 
 func cut(slc []string, i int, j int) []string {
-	return append(slc[:i], slc[j:]...)
+
+	if copyAll := (i == 0 && j == -1); copyAll {
+		return copySlc(slc)
+	}
+
+	if goToEnd := (j == -1); goToEnd {
+		return slc[i:]
+	}
+
+	return slc[i:j]
+}
+
+func copySlc(slc []string) []string {
+	newSlc := make([]string, len(slc))
+	copy(newSlc, slc)
+	return newSlc
 }
 
 func shift(slc []string) (string, []string) {
