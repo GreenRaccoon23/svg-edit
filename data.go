@@ -131,6 +131,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 			return err
 		}
 
+		Log(err)
 		return _copyFromPath(dstPath, srcPath)
 	}
 
