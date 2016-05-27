@@ -27,26 +27,6 @@ func concat(args ...string) string {
 	return Str(args)
 }
 
-func isFirstChar(s string, args ...string) bool {
-	firstChar := string(s[0])
-	for _, a := range args {
-		if firstChar == a {
-			return true
-		}
-	}
-	return false
-}
-
-func isLastChar(s string, args ...string) bool {
-	lastChar := string(s[len(s)-1])
-	for _, z := range args {
-		if lastChar == z {
-			return true
-		}
-	}
-	return false
-}
-
 func FmtSvg(svg string) string {
 
 	if isEmpty := (svg == ""); isEmpty {
@@ -83,6 +63,26 @@ func fmtDir(dir string) string {
 	}
 
 	return formatted
+}
+
+func isFirstChar(s string, args ...string) bool {
+	firstChar := string(s[0])
+	for _, a := range args {
+		if firstChar == a {
+			return true
+		}
+	}
+	return false
+}
+
+func isLastChar(s string, args ...string) bool {
+	lastChar := string(s[len(s)-1])
+	for _, z := range args {
+		if lastChar == z {
+			return true
+		}
+	}
+	return false
 }
 
 func fmtCopy(s string) string {
