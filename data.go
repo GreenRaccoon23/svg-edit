@@ -77,6 +77,10 @@ func _pathExists(path string) bool {
 
 func walkReplace(path string, file os.FileInfo, err error) error {
 
+	if err != nil {
+		return err
+	}
+
 	if filepath.Ext(path) != ".svg" {
 		return nil
 	}
