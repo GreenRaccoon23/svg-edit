@@ -63,7 +63,7 @@ func main() {
 	defer color.Unset()
 
 	mkDir(DstDir)
-	checkMethod()
+	editt()
 	report()
 }
 
@@ -102,13 +102,17 @@ func _setSrcDst() {
 	}
 }
 
-func checkMethod() {
-	if DoRecursive == false {
-		editSingle()
-		return
+func editt() {
+	switch DoRecursive {
+
+	case true:
+		Progress("Editing all svg files recursively...")
+		err := filepath.Walk(SrcDir, WalkReplace)
+		LogErr(err)
+
+	case false:
+		edit(SrcSvg, DstSvg)
 	}
-	Progress("Editing all svg files recursively...")
-	editRecursive()
 }
 
 /*func editLollipop() {
@@ -124,16 +128,6 @@ func checkMethod() {
 	}
 }
 */
-func editSingle() {
-	in := SrcSvg
-	out := DstSvg
-	edit(in, out)
-}
-
-func editRecursive() {
-	err := filepath.Walk(SrcDir, WalkReplace)
-	LogErr(err)
-}
 
 // func argsAnalyse() {
 // 	switch os.Args[1] {
