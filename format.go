@@ -47,7 +47,7 @@ func fmtDir(dir string) string {
 		formatted = concat(formatted, "/")
 	}
 
-	if dir == "." {
+	if dir == "." || dir == "./" {
 		formatted = Pwd
 	}
 

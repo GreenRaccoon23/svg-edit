@@ -105,6 +105,7 @@ func _isPathSymlink(path string) bool {
 
 	fi, err := os.Lstat(path)
 	if err != nil {
+		Log(err)
 		return false
 	}
 
@@ -119,11 +120,17 @@ func _mkDstDir(path string) error {
 func editFileFromPath(dstPath string, srcPath string) error {
 
 	if _isPathSymlink(srcPath) {
-		return _copySymlinkFromPath(dstPath, srcPath)
+		// return _copySymlinkFromPath(dstPath, srcPath)
+		return nil
 	}
 
 	fileContent, err := _fileToString(srcPath)
 	if err != nil {
+
+		if fileContent == "" {
+			return err
+		}
+
 		return _copyFromPath(dstPath, srcPath)
 	}
 
@@ -148,24 +155,24 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	return nil
 }
 
-func _copySymlinkFromPath(dstPath string, srcPath string) error {
+// func _copySymlinkFromPath(dstPath string, srcPath string) error {
 
-	if SrcDstSame {
-		return nil
-	}
+// 	if SrcDstSame {
+// 		return nil
+// 	}
 
-	return _copyFromPath(dstPath, srcPath)
-}
+// 	linkTarget, err := os.Readlink(srcPath)
+// 	if err != nil {
+// 		return err
+// 	}
 
-func _fileToString(fileName string) (string, error) {
+// 	_, err = filepath.Rel(linkTarget, SrcDir)
+// 	if isUnderSrcDir := (err == nil); !isUnderSrcDir {
+// 		return nil
+// 	}
 
-	file, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		return "", err
-	}
-
-	return string(file), nil
-}
+// 	return _copyFromPath(dstPath, srcPath)
+// }
 
 func _stringToFile(s string, file *os.File) error {
 
@@ -178,11 +185,6 @@ func _stringToFile(s string, file *os.File) error {
 }
 
 func _copyFromPath(dstPath string, srcPath string) error {
-
-	// todo: this could be bad
-	if dstPath == srcPath {
-		return nil
-	}
 
 	src, err := os.Open(srcPath)
 	if err != nil {
@@ -206,6 +208,16 @@ func _copyFile(dst *os.File, src *os.File) error {
 	}
 
 	return dst.Sync()
+}
+
+func _fileToString(fileName string) (string, error) {
+
+	file, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return "", err
+	}
+
+	return string(file), nil
 }
 
 /*func _copyFromPath(srcPath, dstPath string) error {
