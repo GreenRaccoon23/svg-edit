@@ -6,17 +6,16 @@ import (
 	"strings"
 )
 
-var (
-	buffer bytes.Buffer
-)
+func concat(args ...string) string {
 
-func concat(args ...string) (concatenated string) {
+	var b bytes.Buffer
+	defer b.Reset()
+
 	for _, s := range args {
-		buffer.WriteString(s)
+		b.WriteString(s)
 	}
-	concatenated = buffer.String()
-	buffer.Reset()
-	return
+
+	return b.String()
 }
 
 func FmtSvg(svg string) string {
