@@ -87,24 +87,28 @@ func fmtDst(path string) (dstPath string) {
 	return
 }
 
-func replace(fileContent string) (replaced string) {
-	re, replacement := _getFindAndReplace(fileContent)
+func replace(fileContent string) string {
 
-	replaced = re.ReplaceAllString(fileContent, replacement)
-	return
-}
-
-func _getFindAndReplace(fileContent string) (re *regexp.Regexp, replacement string) {
-
-	if !DoAddNew || _containsToFind(fileContent) || _hasFill(fileContent) {
-		re = ReToFind
-		replacement = ToReplace
-		return
+	re, replacement, needsToBeEdited := _getFindAndReplace(fileContent)
+	if !needsToBeEdited {
+		return fileContent
 	}
 
-	re = ReAddNew
-	replacement = ToAdd
-	return
+	return re.ReplaceAllString(fileContent, replacement)
+}
+
+func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
+
+	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
+
+		if shouldAddFill := (DoAddNew && !_hasFill(fileContent)); shouldAddFill {
+			return ReAddNew, ToAdd, true
+		}
+
+		return nil, "", false
+	}
+
+	return ReToFind, ToReplace, true
 }
 
 func _containsToFind(fileContent string) bool {
