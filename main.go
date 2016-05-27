@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -62,7 +63,9 @@ func init() {
 func main() {
 	defer color.Unset()
 
-	mkDir(DstDir)
+	if err := mkDir(DstDir); err != nil {
+		log.Fatal(err)
+	}
 	_edit()
 	report()
 }
