@@ -63,7 +63,7 @@ func main() {
 	defer color.Unset()
 
 	mkDir(DstDir)
-	edit()
+	_edit()
 	report()
 }
 
@@ -101,7 +101,8 @@ func _setSrcDst() {
 	}
 }
 
-func edit() {
+func _edit() {
+
 	switch DoRecursive {
 
 	case true:
