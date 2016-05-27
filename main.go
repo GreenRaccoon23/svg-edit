@@ -24,11 +24,11 @@ var (
 	srcFileOrDir string
 	dstFileOrDir string
 
-	origSvg    string
-	copySvg    string
-	pwd        string = Pwd()
-	Root       string
-	destDir    string
+	SrcSvg     string
+	DstSvg     string
+	Pwd        string = getPwd()
+	SrcDir     string
+	DstDir     string
 	numChanged int
 	svgFile    *os.File
 )
@@ -46,7 +46,7 @@ func init() {
 	stringFlagVars := map[string]*string{
 		"o": &oldString,
 		"n": &newString,
-		"d": &Root,
+		"d": &SrcDir,
 	}
 
 	noFlagVars := []*string{
@@ -65,7 +65,7 @@ func init() {
 func main() {
 	defer color.Unset()
 
-	MakeDir(destDir)
+	MakeDir(DstDir)
 	checkMethod()
 	report()
 }
@@ -79,15 +79,15 @@ func _formatGlobalVars() {
 	switch doRecursive {
 
 	case true:
-		Root = FmtDir(srcFileOrDir)
-		destDir = FmtDir(dstFileOrDir)
+		SrcDir = FmtDir(srcFileOrDir)
+		DstDir = FmtDir(dstFileOrDir)
 
 	case false:
-		origSvg = FmtSvg(srcFileOrDir)
-		copySvg = FmtSvg(dstFileOrDir)
+		SrcSvg = FmtSvg(srcFileOrDir)
+		DstSvg = FmtSvg(dstFileOrDir)
 
-		Root = filepath.Dir(origSvg)
-		destDir = filepath.Dir(copySvg)
+		SrcDir = filepath.Dir(SrcSvg)
+		DstDir = filepath.Dir(DstSvg)
 	}
 }
 
@@ -171,10 +171,10 @@ func argsAnalyseSingle(args []string) {
 		c = fmtCopy(o)
 	}
 
-	origSvg = FmtSvg(o)
-	copySvg = FmtSvg(c)
-	Root = filepath.Dir(origSvg)
-	destDir = filepath.Dir(copySvg)
+	SrcSvg = FmtSvg(o)
+	DstSvg = FmtSvg(c)
+	SrcDir = filepath.Dir(SrcSvg)
+	DstDir = filepath.Dir(DstSvg)
 }
 
 func argsAnalyseRecursive(args []string) {
@@ -182,12 +182,12 @@ func argsAnalyseRecursive(args []string) {
 
 	root := args[numArgs-2]
 	if numArgs < 3 {
-		root = pwd
+		root = Pwd
 	}
 	dest := args[numArgs-1]
 
-	Root = FmtDir(root)
-	destDir = FmtDir(dest)
+	SrcDir = FmtDir(root)
+	DstDir = FmtDir(dest)
 }
 
 func analyseColor() {
@@ -212,10 +212,10 @@ func checkMethod() {
 }
 
 /*func editLollipop() {
-	origDestination := destDir
+	origDestination := DstDir
 	for k, v := range MaterialDesign {
 		newString = v
-		destDir = Concat(origDestination, k, v, "/")
+		DstDir = Concat(origDestination, k, v, "/")
 		if doRecursive {
 			editRecursive()
 		} else {
@@ -225,13 +225,13 @@ func checkMethod() {
 }
 */
 func editSingle() {
-	in := origSvg
-	out := copySvg
+	in := SrcSvg
+	out := DstSvg
 	edit(in, out)
 }
 
 func editRecursive() {
-	err := filepath.Walk(Root, WalkReplace)
+	err := filepath.Walk(SrcDir, WalkReplace)
 	LogErr(err)
 }
 
@@ -244,7 +244,7 @@ func _printFlags() {
 
 	fmt.Println("o:", "oldString:", oldString)
 	fmt.Println("n:", "newString:", newString)
-	fmt.Println("d:", "Root:", Root)
+	fmt.Println("d:", "SrcDir:", SrcDir)
 
 	fmt.Println("_:", "srcFileOrDir:", srcFileOrDir)
 	fmt.Println("_:", "dstFileOrDir:", dstFileOrDir)

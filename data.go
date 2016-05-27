@@ -36,7 +36,7 @@ var (
 	}
 )
 
-func Pwd() (pwd string) {
+func getPwd() (pwd string) {
 	var err error
 	pwd, err = os.Getwd()
 	LogErr(err)

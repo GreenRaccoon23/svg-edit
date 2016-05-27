@@ -207,11 +207,11 @@ func FmtDir(dir string) string {
 		return ""
 	}
 
-	//pwd := Pwd()
+	//Pwd := getPwd()
 	formatted := dir
 
 	if IsFirstLetter(dir, "/", "~") == false {
-		formatted = Concat(pwd, "/", dir)
+		formatted = Concat(Pwd, "/", dir)
 	}
 
 	if IsLastLetter(dir, "/") == false {
@@ -219,7 +219,7 @@ func FmtDir(dir string) string {
 	}
 
 	if dir == "." {
-		formatted = pwd
+		formatted = Pwd
 	}
 
 	return formatted
@@ -233,7 +233,7 @@ func fmtCopy(s string) string {
 }
 
 func fmtDest(path string) (out string) {
-	out = strings.Replace(path, Root, destDir, 1)
+	out = strings.Replace(path, SrcDir, DstDir, 1)
 	out = strings.Replace(out, "//", "/", -1)
 	return
 }

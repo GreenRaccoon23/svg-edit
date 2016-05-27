@@ -22,10 +22,6 @@ var (
 	BBlack   = color.New(color.Bold, color.FgBlack)
 )
 
-func ColorUnset() {
-	color.Unset()
-}
-
 func Progress(current ...string) {
 	if doShutUp || doQuiet {
 		return
@@ -40,7 +36,7 @@ func report() {
 	if doShutUp {
 		return
 	}
-	fmt.Printf("Edited %d svg images in %v\n", numChanged, destDir)
+	fmt.Printf("Edited %d svg images in %v\n", numChanged, DstDir)
 }
 
 func printHelp() {
