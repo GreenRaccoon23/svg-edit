@@ -276,3 +276,7 @@ func copySlc(slc []string) []string {
 func shift(slc []string) (string, []string) {
 	return slc[0], slc[1:]
 }
+
+func unshift(slc []string, s string) []string {
+	return append([]string{s}, slc...)
+}
