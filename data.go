@@ -75,7 +75,7 @@ func _pathExists(path string) bool {
 	return true
 }
 
-func walkReplace(path string, file os.FileInfo, err error) error {
+func walkReplace(path string, fi os.FileInfo, err error) error {
 
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 
 	srcPath := path
 
-	if _isSymlink(file) {
+	if _isSymlink(fi) {
 		if err := _copyFromPath(dstPath, srcPath); err != nil {
 			Log(err)
 			return nil
@@ -107,8 +107,8 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 	return nil
 }
 
-func _isSymlink(file os.FileInfo) bool {
-	return (file.Mode()&os.ModeSymlink == os.ModeSymlink)
+func _isSymlink(fi os.FileInfo) bool {
+	return (fi.Mode()&os.ModeSymlink == os.ModeSymlink)
 }
 
 func _mkDstDir(path string) error {
