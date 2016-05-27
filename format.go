@@ -95,15 +95,25 @@ func replace(fileContent string) (replaced string) {
 }
 
 func _getFindAndReplace(fileContent string) (re *regexp.Regexp, replacement string) {
-	if DoAddNew && !strings.Contains(fileContent, ToFind) {
-		re = ReAddNew
-		replacement = concat(`${1}fill="`, ToReplace, `" `)
+
+	if !DoAddNew || _containsToFind(fileContent) || _hasFill(fileContent) {
+		re = ReToFind
+		replacement = ToReplace
 		return
 	}
 
-	re = ReToFind
-	replacement = ToReplace
+	re = ReAddNew
+	replacement = ToAdd
 	return
+}
+
+func _containsToFind(fileContent string) bool {
+	return strings.Contains(fileContent, ToFind)
+}
+
+func _hasFill(fileContent string) bool {
+	return strings.Contains(fileContent, "fill=") ||
+		strings.Contains(fileContent, "fill:")
 }
 
 func pop(slc []string) (string, []string) {

@@ -32,8 +32,9 @@ var (
 
 	SrcDstSame bool
 
-	ReAddNew *regexp.Regexp = regexp.MustCompile("(<svg )")
+	ReAddNew *regexp.Regexp = regexp.MustCompile("(<svg)")
 	ReToFind *regexp.Regexp
+	ToAdd    string
 
 	TotalEdited int
 )
@@ -100,6 +101,7 @@ func _setFindReplace() {
 	}
 
 	ReToFind = regexp.MustCompile(ToFind)
+	ToAdd = concat(`${1} fill="`, ToReplace, `"`)
 }
 
 func _setSrcDst() {

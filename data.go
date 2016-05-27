@@ -135,7 +135,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 
 	editedFileContent := replace(fileContent)
-	if editedFileContent == "" {
+	if editedFileContent == "" || editedFileContent == fileContent {
 		return nil
 	}
 
