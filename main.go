@@ -30,6 +30,8 @@ var (
 	SrcDir string
 	DstDir string
 
+	SrcDstSame bool
+
 	ReAddNew *regexp.Regexp = regexp.MustCompile("(<svg )")
 	ReToFind *regexp.Regexp
 
@@ -111,10 +113,12 @@ func _setSrcDst() {
 	case true:
 		SrcDir = fmtDir(SrcFileOrDir)
 		DstDir = fmtDir(DstFileOrDir)
+		SrcDstSame = (SrcDir == DstDir)
 
 	case false:
 		SrcSvg = addExt(SrcFileOrDir, ".svg")
 		DstSvg = addExt(DstFileOrDir, ".svg")
+		SrcDstSame = (SrcSvg == DstSvg)
 
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
