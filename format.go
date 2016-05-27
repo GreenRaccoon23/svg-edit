@@ -194,21 +194,28 @@ func FmtSvg(svg string) string {
 	return Concat(svg, ".svg")
 }
 
-func FmtDir(dir string) (formatted string) {
+func FmtDir(dir string) string {
+
+	if dir == "" {
+		return ""
+	}
+
 	//pwd := Pwd()
-	formatted = dir
+	formatted := dir
 
 	if IsFirstLetter(dir, "/", "~") == false {
 		formatted = Concat(pwd, "/", dir)
 	}
+
 	if IsLastLetter(dir, "/") == false {
 		formatted = Concat(formatted, "/")
 	}
+
 	if dir == "." {
 		formatted = pwd
 	}
 
-	return
+	return formatted
 }
 
 func fmtCopy(s string) string {
