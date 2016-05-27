@@ -42,21 +42,20 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
-		"svg-edit <options> <original file/directory> <new file/directory>",
-		`-o="": (old)`,
-		"      string in svg file to replace",
-		`-n="": (new)`,
-		"      string to replace old string with",
-		"-a=false: (add)",
-		"      add 'new string' even if 'old string' does not exist",
-		"-c=false: (copy)",
-		"      create 'new string' even if 'old string' does not exist",
-		"-r=false: (recursive)",
-		"      edit svg files beneath the specified folder",
-		"-q=false: (quiet)",
-		"      don't list edited files",
-		"-Q=false: (Quiet)",
-		"      don't show any output",
+`svg-edit <options> <original file/directory> <new file/directory>
+    -o="":
+             (old) string in svg file to replace
+    -n="":
+             (new) string to replace old string with
+    -a=false:
+             (add) add fill color of 'new string' for files without one
+    -c=false:
+             (color) [same as '-a']
+    -r=false:
+             (recursive) edit svg files beneath the specified folder
+    -q=false:
+             (quiet) don't list edited files
+    -Q=false:
+             (QUIET) don't show any output`
 	)
 }
