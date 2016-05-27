@@ -10,15 +10,6 @@ var (
 	buffer bytes.Buffer
 )
 
-func IsTrue(args ...bool) bool {
-	for _, a := range args {
-		if a {
-			return true
-		}
-	}
-	return false
-}
-
 func Str(slice []string) (concatenated string) {
 	for _, s := range slice {
 		buffer.WriteString(s)
@@ -36,72 +27,6 @@ func concat(args ...string) string {
 	return Str(args)
 }
 
-func Filter(slc []string, args ...string) (filtered []string) {
-	sediment := Strain(slc, args...)
-	for _, s := range slc {
-		if s == "" {
-			continue
-		}
-		if SlcContains(sediment, s) {
-			continue
-		}
-		filtered = append(filtered, s)
-	}
-	return
-}
-
-func Strain(slc []string, args ...string) (sediment []string) {
-	for _, s := range args {
-		if s == "" {
-			continue
-		}
-		if SlcContains(slc, s) == false {
-			continue
-		}
-		sediment = append(sediment, s)
-	}
-	return
-}
-
-func SlcContainsLoose(slc []string, args ...string) bool {
-	for _, s := range slc {
-		for _, a := range args {
-			//if s == a {
-			if strings.Contains(s, a) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func SlcContains(slc []string, args ...string) bool {
-	for _, s := range slc {
-		for _, a := range args {
-			//if s == a {
-			if strings.Contains(s, a) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func IsMatch(s string, q string) bool {
-	if s == q {
-		return true
-	}
-	return false
-}
-
-func IsMatchAny(s string, args ...string) bool {
-	for _, a := range args {
-		if a == s {
-			return true
-		}
-	}
-	return false
-}
 func IsFirstLetter(s string, args ...string) bool {
 	firstLetter := string(s[0])
 	for _, a := range args {
@@ -120,53 +45,6 @@ func IsLastLetter(s string, args ...string) bool {
 		}
 	}
 	return false
-}
-
-func EndsWithAny(s string, args ...string) bool {
-	for _, a := range args {
-		if EndsWith(s, a) {
-			return true
-		}
-	}
-	return false
-}
-
-func EndsWith(s string, sub string) bool {
-	subZ := sub[len(sub)-1]
-	sZ := s[len(s)-1]
-	if sZ != subZ {
-		return false
-	}
-	subA := sub[0]
-	target, exists := WhereIsByteInString(s, subA)
-	if exists == false {
-		return false
-	}
-	cutS := s[target:]
-	for i := 0; i < len(cutS); i++ {
-		if cutS[i] != sub[i] {
-			return false
-		}
-	}
-	return true
-}
-
-func IsByteInString(s string, b byte) bool {
-	for i := 0; i < len(s); i++ {
-		if s[i] == b {
-			return true
-		}
-	}
-	return false
-}
-
-func WhereIsByteInString(s string, b byte) (int, bool) {
-	for i := 0; i < len(s); i++ {
-		if s[i] == b {
-			return i, true
-		}
-	}
-	return 0, false
 }
 
 func FmtSvg(svg string) string {
