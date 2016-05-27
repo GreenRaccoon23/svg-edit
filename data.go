@@ -75,15 +75,15 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 		return nil
 	}
 
-	dst := fmtDest(path)
-	_genDest(dst)
-	src := path
+	dstPath := fmtDest(path)
+	_genDest(dstPath)
+	srcPath := path
 
 	if _isSymlink(file) {
-		_copyFromPath(dst, src)
+		_copyFromPath(dstPath, srcPath)
 		return nil
 	}
-	editFileFromPath(dst, src)
+	editFileFromPath(dstPath, srcPath)
 	return nil
 }
 
@@ -96,10 +96,10 @@ func _genDest(path string) {
 	mkDir(dir)
 }
 
-func editFileFromPath(dst string, src string) {
-	content, err := _fileToString(src)
+func editFileFromPath(dstPath string, srcPath string) {
+	content, err := _fileToString(srcPath)
 	if err != nil {
-		_copyFromPath(dst, src)
+		_copyFromPath(dstPath, srcPath)
 		return
 	}
 
@@ -108,7 +108,7 @@ func editFileFromPath(dst string, src string) {
 		return
 	}
 
-	newFile, err := os.Create(dst)
+	newFile, err := os.Create(dstPath)
 	if err != nil {
 		Log(err)
 		return
@@ -117,7 +117,7 @@ func editFileFromPath(dst string, src string) {
 
 	_stringToFile(edited, newFile)
 	TotalEdited += 1
-	Progress(dst)
+	Progress(dstPath)
 }
 
 func _fileToString(fileName string) (fileString string, err error) {
