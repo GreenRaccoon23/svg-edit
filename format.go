@@ -188,9 +188,16 @@ func WhereIsByteInString(s string, b byte) (int, bool) {
 }
 
 func FmtSvg(svg string) string {
-	if strings.Contains(svg, ".svg") {
+
+	if isEmpty := (svg == ""); isEmpty {
+		return ""
+	}
+
+	trimmedExt := strings.trimSuffix(svg, ".svg")
+	if hasExt := (trimmedExt != svg); hasExt {
 		return svg
 	}
+
 	return Concat(svg, ".svg")
 }
 
