@@ -69,7 +69,7 @@ func mkDir(dir string) error {
 }
 
 func _pathExists(path string) bool {
-	if _, err := os.Stat(dir); err != nil {
+	if _, err := os.Stat(path); err != nil {
 		return false
 	}
 	return true
@@ -83,18 +83,23 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 
 	dstPath := fmtDst(path)
 	if err = _mkDstDir(dstPath); err != nil {
-		LogErr(err)
+		Log(err)
 		return nil
 	}
 
 	srcPath := path
 
 	if _isSymlink(file) {
-		_copyFromPath(dstPath, srcPath)
+		if err = _copyFromPath(dstPath, srcPath); err != nil {
+			Log(err)
+		}
 		return nil
 	}
 
-	editFileFromPath(dstPath, srcPath)
+	if err = editFileFromPath(dstPath, srcPath); err != nil {
+		Log(err)
+	}
+
 	return nil
 }
 
@@ -107,23 +112,21 @@ func _mkDstDir(path string) error {
 	return mkDir(dir)
 }
 
-func editFileFromPath(dstPath string, srcPath string) {
+func editFileFromPath(dstPath string, srcPath string) error {
 
 	content, err := _fileToString(srcPath)
 	if err != nil {
-		_copyFromPath(dstPath, srcPath)
-		return
+		return _copyFromPath(dstPath, srcPath)
 	}
 
 	edited := replace(content)
 	if edited == "" {
-		return
+		return nil
 	}
 
 	newFile, err := os.Create(dstPath)
 	if err != nil {
-		Log(err)
-		return
+		return err
 	}
 	defer newFile.Close()
 
@@ -131,6 +134,8 @@ func editFileFromPath(dstPath string, srcPath string) {
 
 	TotalEdited += 1
 	Progress(dstPath)
+
+	return nil
 }
 
 func _fileToString(fileName string) (string, error) {
@@ -153,28 +158,26 @@ func _stringToFile(s string, file *os.File) {
 	LogErr(err)
 }
 
-func _copyFromPath(dstPath string, srcPath string) {
+func _copyFromPath(dstPath string, srcPath string) error {
 
+	// todo: this could be bad
 	if dstPath == srcPath {
-		return
+		return nil
 	}
 
 	src, err := os.Open(srcPath)
 	if err != nil {
-		Log(err)
-		return
+		return err
 	}
 	defer src.Close()
 
 	dst, err := os.Create(dstPath)
 	if err != nil {
-		Log(err)
-		return
+		return err
 	}
 	defer dst.Close()
 
-	err = _copyFile(dst, src)
-	LogErr(err)
+	return _copyFile(dst, src)
 }
 
 func _copyFile(dst *os.File, src *os.File) error {

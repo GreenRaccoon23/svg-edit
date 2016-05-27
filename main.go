@@ -66,7 +66,11 @@ func main() {
 	if err := mkDir(DstDir); err != nil {
 		log.Fatal(err)
 	}
-	_edit()
+
+	if err := _edit(); err != nil {
+		Log(err)
+	}
+
 	report()
 }
 
@@ -104,17 +108,16 @@ func _setSrcDst() {
 	}
 }
 
-func _edit() {
+func _edit() error {
 
 	switch DoRecursive {
 
 	case true:
 		Progress("Editing all svg files recursively...")
-		err := filepath.Walk(SrcDir, walkReplace)
-		LogErr(err)
+		return filepath.Walk(SrcDir, walkReplace)
 
 	case false:
-		editFileFromPath(DstSvg, SrcSvg)
+		return editFileFromPath(DstSvg, SrcSvg)
 	}
 }
 
