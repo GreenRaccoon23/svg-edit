@@ -37,7 +37,6 @@ func fmtDir(dir string) string {
 		return ""
 	}
 
-	//Pwd := getPwd()
 	formatted := dir
 
 	if isFirstChar(dir, "/", "~") == false {
