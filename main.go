@@ -111,7 +111,7 @@ func _edit() {
 		LogErr(err)
 
 	case false:
-		editFileFromPath(SrcSvg, DstSvg)
+		editFileFromPath(DstSvg, SrcSvg)
 	}
 }
 
