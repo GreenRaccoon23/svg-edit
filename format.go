@@ -74,12 +74,12 @@ func isLastChar(s string, args ...string) bool {
 	return false
 }
 
-func fmtCopy(s string) string {
-	if strings.HasSuffix(s, ".svg") {
-		return strings.Replace(s, ".svg", "-copy.svg", 1)
-	}
-	return concat(s, "-copy.svg")
-}
+// func fmtCopy(s string) string {
+// 	if strings.HasSuffix(s, ".svg") {
+// 		return strings.Replace(s, ".svg", "-copy.svg", 1)
+// 	}
+// 	return concat(s, "-copy.svg")
+// }
 
 func fmtDst(path string) (dstPath string) {
 	dstPath = strings.Replace(path, SrcDir, DstDir, 1)
