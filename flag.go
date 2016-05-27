@@ -56,7 +56,7 @@ func (a *_argParser) _reset() {
 	go func() { a._argsNotFlagged = nil }()
 }
 
-func (a *_argParser) _parseArgs() []string {
+func (a *_argParser) _parseArgs() (extraArgs []string) {
 
 	args := a.args
 	iEnd := len(args) - 1
@@ -70,7 +70,8 @@ func (a *_argParser) _parseArgs() []string {
 		}
 	}
 
-	return a._setNoFlags()
+	extraArgs = a._setNoFlags()
+	return
 }
 
 func (a *_argParser) _setNoFlags() (extraArgs []string) {

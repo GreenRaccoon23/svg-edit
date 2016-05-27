@@ -35,7 +35,7 @@ var (
 
 func init() {
 
-	boolFlags := map[string]*bool{
+	boolFlagVars := map[string]*bool{
 		"r": &doRecursive,
 		"a": &doAddNew,
 		"c": &doCopy,
@@ -43,19 +43,18 @@ func init() {
 		"Q": &doShutUp,
 	}
 
-	stringFlags := map[string]*string{
+	stringFlagVars := map[string]*string{
 		"o": &oldString,
 		"n": &newString,
 		"d": &Root,
 	}
 
-	noFlags := []*string{
+	noFlagVars := []*string{
 		&originalFileOrDir,
 		&newFileOrDir,
 	}
 
-	extraArgs := parseArgs(boolFlags, stringFlags, noFlags)
-	fmt.Println("extraArgs:", extraArgs)
+	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 	// argsAnalyse()
 
 	_printFlags()
