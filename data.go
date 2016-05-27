@@ -86,10 +86,7 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 }
 
 func _isSymlink(file os.FileInfo) bool {
-	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
-		return true
-	}
-	return false
+	return (file.Mode()&os.ModeSymlink == os.ModeSymlink)
 }
 
 func _genDest(path string) {
