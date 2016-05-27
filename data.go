@@ -75,7 +75,7 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 		return nil
 	}
 
-	dstPath := fmtDest(path)
+	dstPath := fmtDst(path)
 	_genDest(dstPath)
 	srcPath := path
 
