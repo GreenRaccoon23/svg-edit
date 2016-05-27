@@ -144,11 +144,11 @@ func _verifyGlobalVars() error {
 		return fmt.Errorf("Fatal program bug! DstFileOrDir not set")
 	}
 
-	if SrcDir == "" && DoRecursive {
+	if SrcDir == "" {
 		return fmt.Errorf("Fatal program bug! SrcDir not set")
 	}
 
-	if DstDir == "" && DoRecursive {
+	if DstDir == "" {
 		return fmt.Errorf("Fatal program bug! DstDir not set")
 	}
 
