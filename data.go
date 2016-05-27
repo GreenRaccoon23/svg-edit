@@ -60,13 +60,6 @@ func LogErr(err error) {
 	Log(err)
 }
 
-func IsSymlink(file os.FileInfo) bool {
-	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
-		return true
-	}
-	return false
-}
-
 func mkDir(dir string) {
 	if _, err := os.Stat(dir); err != nil {
 		err := os.MkdirAll(dir, 0777)
@@ -84,12 +77,19 @@ func WalkReplace(path string, file os.FileInfo, err error) error {
 	out := fmtDest(path)
 	genDest(out)
 
-	if IsSymlink(file) {
+	if isSymlink(file) {
 		Copy(in, out)
 		return nil
 	}
 	edit(in, out)
 	return nil
+}
+
+func isSymlink(file os.FileInfo) bool {
+	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
+		return true
+	}
+	return false
 }
 
 func genDest(path string) {
@@ -99,7 +99,7 @@ func genDest(path string) {
 }
 
 func edit(in string, out string) {
-	content, err := FileToString(in)
+	content, err := fileToString(in)
 	if err != nil {
 		Copy(in, out)
 		return
@@ -117,12 +117,12 @@ func edit(in string, out string) {
 	}
 	defer newFile.Close()
 
-	StringToFile(edited, newFile)
+	stringToFile(edited, newFile)
 	TotalEdited += 1
 	Progress(out)
 }
 
-func FileToString(fileName string) (fileString string, err error) {
+func fileToString(fileName string) (fileString string, err error) {
 	var file []byte
 	file, err = ioutil.ReadFile(fileName)
 	if err != nil {
@@ -133,7 +133,7 @@ func FileToString(fileName string) (fileString string, err error) {
 	return
 }
 
-func StringToFile(s string, file *os.File) {
+func stringToFile(s string, file *os.File) {
 	b := []byte(s)
 	_, err := file.Write(b)
 	LogErr(err)
