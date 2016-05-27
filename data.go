@@ -71,20 +71,19 @@ func mkDir(dir string) {
 }
 
 func walkReplace(path string, file os.FileInfo, err error) error {
-	ext := filepath.Ext(path)
-	if ext != ".svg" {
+	if ext := filepath.Ext(path); ext != ".svg" {
 		return nil
 	}
 
-	in := path
-	out := fmtDest(path)
-	_genDest(out)
+	src := path
+	dst := fmtDest(path)
+	_genDest(dst)
 
 	if _isSymlink(file) {
-		_copy(in, out)
+		_copy(src, dst)
 		return nil
 	}
-	editFileFromPath(in, out)
+	editFileFromPath(src, dst)
 	return nil
 }
 
@@ -98,10 +97,10 @@ func _genDest(path string) {
 	return
 }
 
-func editFileFromPath(in string, out string) {
-	content, err := _fileToString(in)
+func editFileFromPath(src string, dst string) {
+	content, err := _fileToString(src)
 	if err != nil {
-		_copy(in, out)
+		_copy(src, dst)
 		return
 	}
 
@@ -110,7 +109,7 @@ func editFileFromPath(in string, out string) {
 		return
 	}
 
-	newFile, err := os.Create(out)
+	newFile, err := os.Create(dst)
 	if err != nil {
 		Log(err)
 		return
@@ -119,7 +118,7 @@ func editFileFromPath(in string, out string) {
 
 	_stringToFile(edited, newFile)
 	TotalEdited += 1
-	Progress(out)
+	Progress(dst)
 }
 
 func _fileToString(fileName string) (fileString string, err error) {
@@ -142,49 +141,50 @@ func _stringToFile(s string, file *os.File) {
 	LogErr(err)
 }
 
-func _copy(source, destination string) {
-	if destination == source {
+func _copy(srcPath, dstPath string) {
+
+	if dstPath == srcPath {
 		return
 	}
 
-	toRead, err := os.Open(source)
+	src, err := os.Open(srcPath)
 	if err != nil {
 		Log(err)
 		return
 	}
-	defer toRead.Close()
+	defer src.Close()
 
-	toWrite, err := os.Create(destination)
+	dst, err := os.Create(dstPath)
 	if err != nil {
 		Log(err)
 		return
 	}
-	defer toWrite.Close()
+	defer dst.Close()
 
-	_, err = io.Copy(toWrite, toRead)
+	_, err = io.Copy(dst, src)
 	if err != nil {
 		Log(err)
 		return
 	}
 
-	err = toWrite.Sync()
+	err = dst.Sync()
 	LogErr(err)
 }
 
-/*func Copy(source, destination string) error {
-	toRead, err := os.Open(source)
+/*func Copy(srcPath, dstPath string) error {
+	src, err := os.Open(srcPath)
 	if err != nil {
 		return err
 	}
-	defer toRead.Close()
+	defer src.Close()
 
-	toWrite, err := os.Create(destination)
+	dst, err := os.Create(dstPath)
 	if err != nil {
 		return err
 	}
-	defer toWrite.Close()
+	defer dst.Close()
 
-	_, err = io.Copy(toWrite, toRead)
+	_, err = io.Copy(dst, src)
 	if err != nil {
 		return err
 	}
