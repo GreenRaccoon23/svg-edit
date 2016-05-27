@@ -16,7 +16,7 @@ var (
 
 	DoRecursive bool
 	DoAddNew    bool
-	DoCopy      bool
+	DoColor     bool
 	DoQuiet     bool
 	DoShutUp    bool
 
@@ -42,7 +42,7 @@ func init() {
 	boolFlagVars := map[string]*bool{
 		"r": &DoRecursive,
 		"a": &DoAddNew,
-		"c": &DoCopy,
+		"c": &DoColor,
 		"q": &DoQuiet,
 		"Q": &DoShutUp,
 	}
@@ -83,6 +83,10 @@ func main() {
 }
 
 func _setFindReplace() {
+
+	if DoAddNew {
+		DoColor = true
+	}
 
 	oldString := strings.ToLower(ToFind)
 	if MaterialDesign[oldString] != "" {
@@ -202,7 +206,7 @@ func _edit() error {
 // 	flag.StringVar(&ToFind, "o", "", "(old) string in svg file to replace")
 // 	flag.StringVar(&ToReplace, "n", "", "(new) string in svg file to replace with")
 // 	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
-// 	flag.BoolVar(&DoCopy, "c", false, "Make a copy instead of editing file")
+// 	flag.BoolVar(&DoColor, "c", false, "Make a copy instead of editing file")
 // 	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
 // 	flag.BoolVar(&DoQuiet, "q", false, "don't list edited files")
 // 	flag.BoolVar(&DoShutUp, "Q", false, "don't show any output")
@@ -234,11 +238,11 @@ func _edit() error {
 
 // 	o := args[numArgs-1]
 // 	c := o
-// 	if DoCopy && numArgs > 2 {
+// 	if DoColor && numArgs > 2 {
 // 		o = args[numArgs-2]
 // 		c = args[numArgs-1]
 // 	}
-// 	if DoCopy && numArgs < 3 {
+// 	if DoColor && numArgs < 3 {
 // 		o = args[numArgs-1]
 // 		c = fmtCopy(o)
 // 	}
@@ -265,7 +269,7 @@ func _edit() error {
 func _printFlags() {
 	fmt.Println("r:", "DoRecursive:", DoRecursive)
 	fmt.Println("a:", "DoAddNew:", DoAddNew)
-	fmt.Println("c:", "DoCopy:", DoCopy)
+	fmt.Println("c:", "DoColor:", DoColor)
 	fmt.Println("q:", "DoQuiet:", DoQuiet)
 	fmt.Println("Q:", "DoShutUp:", DoShutUp)
 
