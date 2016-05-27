@@ -131,7 +131,9 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 	defer newFile.Close()
 
-	_stringToFile(edited, newFile)
+	if err = _stringToFile(edited, newFile); err != nil {
+		return err
+	}
 
 	TotalEdited += 1
 	Progress(dstPath)
@@ -149,14 +151,14 @@ func _fileToString(fileName string) (string, error) {
 	return string(file), nil
 }
 
-func _stringToFile(s string, file *os.File) {
+func _stringToFile(s string, file *os.File) error {
 
 	b := []byte(s)
-	_, err := file.Write(b)
-	LogErr(err)
+	if _, err := file.Write(b); err != nil {
+		return err
+	}
 
-	err = file.Sync()
-	LogErr(err)
+	return file.Sync()
 }
 
 func _copyFromPath(dstPath string, srcPath string) error {
