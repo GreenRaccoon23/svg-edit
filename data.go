@@ -38,6 +38,7 @@ var (
 )
 
 func getPwd() string {
+
 	pwd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -54,10 +55,7 @@ func Log(err error) {
 }
 
 func LogErr(err error) {
-	if DoShutUp {
-		return
-	}
-	if err == nil {
+	if DoShutUp || err == nil {
 		return
 	}
 	Log(err)
@@ -78,6 +76,7 @@ func _pathExists(path string) bool {
 }
 
 func walkReplace(path string, file os.FileInfo, err error) error {
+
 	if filepath.Ext(path) != ".svg" {
 		return nil
 	}
@@ -94,6 +93,7 @@ func walkReplace(path string, file os.FileInfo, err error) error {
 		_copyFromPath(dstPath, srcPath)
 		return nil
 	}
+
 	editFileFromPath(dstPath, srcPath)
 	return nil
 }
@@ -108,6 +108,7 @@ func _mkDstDir(path string) error {
 }
 
 func editFileFromPath(dstPath string, srcPath string) {
+
 	content, err := _fileToString(srcPath)
 	if err != nil {
 		_copyFromPath(dstPath, srcPath)
@@ -127,22 +128,23 @@ func editFileFromPath(dstPath string, srcPath string) {
 	defer newFile.Close()
 
 	_stringToFile(edited, newFile)
+
 	TotalEdited += 1
 	Progress(dstPath)
 }
 
-func _fileToString(fileName string) (fileString string, err error) {
-	var file []byte
-	file, err = ioutil.ReadFile(fileName)
+func _fileToString(fileName string) (string, error) {
+
+	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		Log(err)
-		return
+		return "", err
 	}
-	fileString = string(file)
-	return
+
+	return string(file), nil
 }
 
 func _stringToFile(s string, file *os.File) {
+
 	b := []byte(s)
 	_, err := file.Write(b)
 	LogErr(err)
@@ -176,15 +178,15 @@ func _copyFromPath(dstPath string, srcPath string) {
 }
 
 func _copyFile(dst *os.File, src *os.File) error {
-	_, err := io.Copy(dst, src)
-	if err != nil {
+
+	if _, err := io.Copy(dst, src); err != nil {
 		return err
 	}
 
 	return dst.Sync()
 }
 
-/*func Copy(srcPath, dstPath string) error {
+/*func _copyFromPath(srcPath, dstPath string) error {
 	src, err := os.Open(srcPath)
 	if err != nil {
 		return err
