@@ -75,24 +75,24 @@ func WalkReplace(path string, file os.FileInfo, err error) error {
 
 	in := path
 	out := fmtDest(path)
-	genDest(out)
+	_genDest(out)
 
-	if isSymlink(file) {
-		Copy(in, out)
+	if _isSymlink(file) {
+		_copy(in, out)
 		return nil
 	}
 	edit(in, out)
 	return nil
 }
 
-func isSymlink(file os.FileInfo) bool {
+func _isSymlink(file os.FileInfo) bool {
 	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
 		return true
 	}
 	return false
 }
 
-func genDest(path string) {
+func _genDest(path string) {
 	dir := filepath.Dir(path)
 	mkDir(dir)
 	return
@@ -101,7 +101,7 @@ func genDest(path string) {
 func edit(in string, out string) {
 	content, err := fileToString(in)
 	if err != nil {
-		Copy(in, out)
+		_copy(in, out)
 		return
 	}
 
@@ -142,7 +142,7 @@ func stringToFile(s string, file *os.File) {
 	LogErr(err)
 }
 
-func Copy(source, destination string) {
+func _copy(source, destination string) {
 	if destination == source {
 		return
 	}
