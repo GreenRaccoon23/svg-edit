@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/fatih/color"
 )
 
 var (
@@ -18,6 +20,9 @@ var (
 
 	oldString string
 	newString string
+
+	originalFileOrDir string
+	newFileOrDir      string
 
 	origSvg    string
 	copySvg    string
@@ -44,7 +49,12 @@ func init() {
 		"d": &Root,
 	}
 
-	extraArgs := parseArgs(boolFlags, stringFlags)
+	noFlags := []*string{
+		&originalFileOrDir,
+		&newFileOrDir,
+	}
+
+	extraArgs := parseArgs(boolFlags, stringFlags, noFlags)
 	fmt.Println("extraArgs:", extraArgs)
 	// argsAnalyse()
 
@@ -53,7 +63,7 @@ func init() {
 }
 
 func main() {
-	defer ColorUnset()
+	defer color.Unset()
 
 	MakeDir(destDir)
 	checkMethod()
@@ -214,4 +224,7 @@ func _printFlags() {
 	fmt.Println("o:", "oldString:", oldString)
 	fmt.Println("n:", "newString:", newString)
 	fmt.Println("d:", "Root:", Root)
+
+	fmt.Println("_:", "originalFileOrDir:", originalFileOrDir)
+	fmt.Println("_:", "newFileOrDir:", newFileOrDir)
 }
