@@ -24,8 +24,7 @@ func addExt(path string, ext string) string {
 		return ""
 	}
 
-	trimmedExt := strings.TrimSuffix(path, ext)
-	if hasExt := (trimmedExt != path); hasExt {
+	if hasExt := strings.HasSuffix(path, ext); hasExt {
 		return path
 	}
 
