@@ -103,10 +103,6 @@ func findReplacements(s string) (re *regexp.Regexp, replacement string) {
 		return
 	}
 
-	if ToFind == "" {
-		return
-	}
-
 	re = ReToFind
 	replacement = ToReplace
 	return
