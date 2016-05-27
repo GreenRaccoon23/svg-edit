@@ -23,7 +23,7 @@ var (
 )
 
 func Progress(current ...string) {
-	if doShutUp || doQuiet {
+	if DoShutUp || DoQuiet {
 		return
 	}
 	for _, c := range current {
@@ -33,10 +33,10 @@ func Progress(current ...string) {
 }
 
 func report() {
-	if doShutUp {
+	if DoShutUp {
 		return
 	}
-	fmt.Printf("Edited %d svg images in %v\n", numChanged, DstDir)
+	fmt.Printf("Edited %d svg images in %v\n", TotalEdited, DstDir)
 }
 
 func printHelp() {
@@ -54,7 +54,7 @@ func printHelp() {
 		"      create 'new string' even if 'old string' does not exist",
 		"-r=false: (recursive)",
 		"      edit svg files beneath the specified folder",
-		"-q=false: (doQuiet)",
+		"-q=false: (quiet)",
 		"      don't list edited files",
 		"-Q=false: (Quiet)",
 		"      don't show any output",

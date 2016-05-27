@@ -44,14 +44,14 @@ func getPwd() (pwd string) {
 }
 
 func Log(err error) {
-	if doShutUp {
+	if DoShutUp {
 		return
 	}
 	fmt.Println(err)
 }
 
 func LogErr(err error) {
-	if doShutUp {
+	if DoShutUp {
 		return
 	}
 	if err == nil {
@@ -136,7 +136,7 @@ func edit(in string, out string) {
 	defer newFile.Close()
 
 	StringToFile(edited, newFile)
-	numChanged += 1
+	TotalEdited += 1
 	Progress(out)
 }
 

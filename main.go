@@ -12,46 +12,45 @@ import (
 )
 
 var (
-	doRecursive bool
-	doAddNew    bool
-	doCopy      bool
-	doQuiet     bool
-	doShutUp    bool
+	DoRecursive bool
+	DoAddNew    bool
+	DoCopy      bool
+	DoQuiet     bool
+	DoShutUp    bool
 
-	oldString string
-	newString string
+	OldString string
+	NewString string
 
-	srcFileOrDir string
-	dstFileOrDir string
+	SrcFileOrDir string
+	DstFileOrDir string
 
-	SrcSvg     string
-	DstSvg     string
-	Pwd        string = getPwd()
-	SrcDir     string
-	DstDir     string
-	numChanged int
-	svgFile    *os.File
+	SrcSvg      string
+	DstSvg      string
+	Pwd         string = getPwd()
+	SrcDir      string
+	DstDir      string
+	TotalEdited int
 )
 
 func init() {
 
 	boolFlagVars := map[string]*bool{
-		"r": &doRecursive,
-		"a": &doAddNew,
-		"c": &doCopy,
-		"q": &doQuiet,
-		"Q": &doShutUp,
+		"r": &DoRecursive,
+		"a": &DoAddNew,
+		"c": &DoCopy,
+		"q": &DoQuiet,
+		"Q": &DoShutUp,
 	}
 
 	stringFlagVars := map[string]*string{
-		"o": &oldString,
-		"n": &newString,
+		"o": &OldString,
+		"n": &NewString,
 		"d": &SrcDir,
 	}
 
 	noFlagVars := []*string{
-		&srcFileOrDir,
-		&dstFileOrDir,
+		&SrcFileOrDir,
+		&DstFileOrDir,
 	}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
@@ -72,19 +71,19 @@ func main() {
 
 func _formatGlobalVars() {
 
-	if dstFileOrDir == "" {
-		dstFileOrDir = srcFileOrDir
+	if DstFileOrDir == "" {
+		DstFileOrDir = SrcFileOrDir
 	}
 
-	switch doRecursive {
+	switch DoRecursive {
 
 	case true:
-		SrcDir = FmtDir(srcFileOrDir)
-		DstDir = FmtDir(dstFileOrDir)
+		SrcDir = FmtDir(SrcFileOrDir)
+		DstDir = FmtDir(DstFileOrDir)
 
 	case false:
-		SrcSvg = FmtSvg(srcFileOrDir)
-		DstSvg = FmtSvg(dstFileOrDir)
+		SrcSvg = FmtSvg(SrcFileOrDir)
+		DstSvg = FmtSvg(DstFileOrDir)
 
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
@@ -97,18 +96,18 @@ func argsAnalyse() {
 		printHelp()
 	}
 
-	flag.StringVar(&oldString, "o", "", "(old) string in svg file to replace")
-	flag.StringVar(&newString, "n", "", "(new) string in svg file to replace with")
-	flag.BoolVar(&doAddNew, "a", false, "add new string if the old one does not exist")
-	flag.BoolVar(&doCopy, "c", false, "Make a copy instead of editing file")
-	flag.BoolVar(&doRecursive, "r", false, "walk recursively down to the bottom of the directory")
-	flag.BoolVar(&doQuiet, "q", false, "don't list edited files")
-	flag.BoolVar(&doShutUp, "Q", false, "don't show any output")
+	flag.StringVar(&OldString, "o", "", "(old) string in svg file to replace")
+	flag.StringVar(&NewString, "n", "", "(new) string in svg file to replace with")
+	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
+	flag.BoolVar(&DoCopy, "c", false, "Make a copy instead of editing file")
+	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
+	flag.BoolVar(&DoQuiet, "q", false, "don't list edited files")
+	flag.BoolVar(&DoShutUp, "Q", false, "don't show any output")
 	flag.Parse()
 
 	args := FilterOut(os.Args,
-		"-o", oldString,
-		"-n", newString,
+		"-o", OldString,
+		"-n", NewString,
 		"-a",
 		"-c",
 		"-r",
@@ -117,7 +116,7 @@ func argsAnalyse() {
 	)
 
 	fmt.Println("args:", args)
-	switch doRecursive {
+	switch DoRecursive {
 	case true:
 		argsAnalyseRecursive(args)
 	case false:
@@ -162,11 +161,11 @@ func argsAnalyseSingle(args []string) {
 
 	o := args[numArgs-1]
 	c := o
-	if doCopy && numArgs > 2 {
+	if DoCopy && numArgs > 2 {
 		o = args[numArgs-2]
 		c = args[numArgs-1]
 	}
-	if doCopy && numArgs < 3 {
+	if DoCopy && numArgs < 3 {
 		o = args[numArgs-1]
 		c = fmtCopy(o)
 	}
@@ -191,19 +190,19 @@ func argsAnalyseRecursive(args []string) {
 }
 
 func analyseColor() {
-	checkOld := strings.ToLower(oldString)
-	checkNew := strings.ToLower(newString)
+	checkOld := strings.ToLower(OldString)
+	checkNew := strings.ToLower(NewString)
 
 	if IsKeyInMap(MaterialDesign, checkOld) {
-		oldString = MaterialDesign[checkOld]
+		OldString = MaterialDesign[checkOld]
 	}
 	if IsKeyInMap(MaterialDesign, checkNew) {
-		newString = MaterialDesign[checkNew]
+		NewString = MaterialDesign[checkNew]
 	}
 }
 
 func checkMethod() {
-	if doRecursive == false {
+	if DoRecursive == false {
 		editSingle()
 		return
 	}
@@ -214,9 +213,9 @@ func checkMethod() {
 /*func editLollipop() {
 	origDestination := DstDir
 	for k, v := range MaterialDesign {
-		newString = v
+		NewString = v
 		DstDir = Concat(origDestination, k, v, "/")
-		if doRecursive {
+		if DoRecursive {
 			editRecursive()
 		} else {
 			editSingle()
@@ -236,16 +235,16 @@ func editRecursive() {
 }
 
 func _printFlags() {
-	fmt.Println("r:", "doRecursive:", doRecursive)
-	fmt.Println("a:", "doAddNew:", doAddNew)
-	fmt.Println("c:", "doCopy:", doCopy)
-	fmt.Println("q:", "doQuiet:", doQuiet)
-	fmt.Println("Q:", "doShutUp:", doShutUp)
+	fmt.Println("r:", "DoRecursive:", DoRecursive)
+	fmt.Println("a:", "DoAddNew:", DoAddNew)
+	fmt.Println("c:", "DoCopy:", DoCopy)
+	fmt.Println("q:", "DoQuiet:", DoQuiet)
+	fmt.Println("Q:", "DoShutUp:", DoShutUp)
 
-	fmt.Println("o:", "oldString:", oldString)
-	fmt.Println("n:", "newString:", newString)
+	fmt.Println("o:", "OldString:", OldString)
+	fmt.Println("n:", "NewString:", NewString)
 	fmt.Println("d:", "SrcDir:", SrcDir)
 
-	fmt.Println("_:", "srcFileOrDir:", srcFileOrDir)
-	fmt.Println("_:", "dstFileOrDir:", dstFileOrDir)
+	fmt.Println("_:", "SrcFileOrDir:", SrcFileOrDir)
+	fmt.Println("_:", "DstFileOrDir:", DstFileOrDir)
 }
