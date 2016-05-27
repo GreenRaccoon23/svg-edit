@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -36,11 +37,13 @@ var (
 	}
 )
 
-func getPwd() (pwd string) {
-	var err error
-	pwd, err = os.Getwd()
-	LogErr(err)
-	return
+func getPwd() string {
+	pwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return pwd
 }
 
 func Log(err error) {
