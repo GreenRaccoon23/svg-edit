@@ -81,7 +81,7 @@ func WalkReplace(path string, file os.FileInfo, err error) error {
 		_copy(in, out)
 		return nil
 	}
-	edit(in, out)
+	editFileFromPath(in, out)
 	return nil
 }
 
@@ -98,7 +98,7 @@ func _genDest(path string) {
 	return
 }
 
-func edit(in string, out string) {
+func editFileFromPath(in string, out string) {
 	content, err := fileToString(in)
 	if err != nil {
 		_copy(in, out)

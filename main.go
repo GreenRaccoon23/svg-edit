@@ -63,7 +63,7 @@ func main() {
 	defer color.Unset()
 
 	mkDir(DstDir)
-	editt()
+	edit()
 	report()
 }
 
@@ -78,7 +78,6 @@ func _setFindReplace() {
 	if MaterialDesign[oldString] != "" {
 		ToReplace = MaterialDesign[newString]
 	}
-
 }
 
 func _setSrcDst() {
@@ -102,7 +101,7 @@ func _setSrcDst() {
 	}
 }
 
-func editt() {
+func edit() {
 	switch DoRecursive {
 
 	case true:
@@ -111,7 +110,7 @@ func editt() {
 		LogErr(err)
 
 	case false:
-		edit(SrcSvg, DstSvg)
+		editFileFromPath(SrcSvg, DstSvg)
 	}
 }
 
