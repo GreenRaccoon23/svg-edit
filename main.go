@@ -5,12 +5,15 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
 )
 
 var (
+	Pwd string = getPwd()
+
 	DoRecursive bool
 	DoAddNew    bool
 	DoCopy      bool
@@ -23,11 +26,14 @@ var (
 	SrcFileOrDir string
 	DstFileOrDir string
 
-	SrcSvg      string
-	DstSvg      string
-	Pwd         string = getPwd()
-	SrcDir      string
-	DstDir      string
+	SrcSvg string
+	DstSvg string
+	SrcDir string
+	DstDir string
+
+	ReAddNew *regexp.Regexp = regexp.MustCompile("(<svg )")
+	ReToFind *regexp.Regexp
+
 	TotalEdited int
 )
 
@@ -85,6 +91,8 @@ func _setFindReplace() {
 	if MaterialDesign[oldString] != "" {
 		ToReplace = MaterialDesign[newString]
 	}
+
+	ReToFind = regexp.MustCompile(ToFind)
 }
 
 func _setSrcDst() {
@@ -119,6 +127,8 @@ func _edit() error {
 	case false:
 		return editFileFromPath(DstSvg, SrcSvg)
 	}
+
+	return nil //why does Go require this?
 }
 
 /*func editLollipop() {
