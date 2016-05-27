@@ -161,10 +161,10 @@ func analyseColor() {
 	checkOld := strings.ToLower(OldString)
 	checkNew := strings.ToLower(NewString)
 
-	if IsKeyInMap(MaterialDesign, checkOld) {
+	if MaterialDesign[checkOld] != nil {
 		OldString = MaterialDesign[checkOld]
 	}
-	if IsKeyInMap(MaterialDesign, checkNew) {
+	if MaterialDesign[checkOld] != nil {
 		NewString = MaterialDesign[checkNew]
 	}
 }

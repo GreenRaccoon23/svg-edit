@@ -122,24 +122,6 @@ func IsLastLetter(s string, args ...string) bool {
 	return false
 }
 
-func IsKeyInMap(m map[string]string, s string) bool {
-	for k, _ := range m {
-		if k == s {
-			return true
-		}
-	}
-	return false
-}
-
-func IsValueInMap(m map[string]string, s string) bool {
-	for _, v := range m {
-		if v == s {
-			return true
-		}
-	}
-	return false
-}
-
 func EndsWithAny(s string, args ...string) bool {
 	for _, a := range args {
 		if EndsWith(s, a) {
