@@ -62,6 +62,8 @@ func init() {
 	_setSrcDst()
 	_setFindReplace()
 
+	_verifyGlobalVars()
+
 	_printFlags()
 	os.Exit(0)
 }
@@ -114,6 +116,52 @@ func _setSrcDst() {
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
 	}
+}
+
+func _verifyGlobalVars() error {
+
+	if ToFind == "" {
+		return fmt.Errorf("-o paramater required")
+	}
+
+	if ToReplace == "" {
+		return fmt.Errorf("-n paramater required")
+	}
+
+	if SrcFileOrDir == "" {
+		return fmt.Errorf("<original file/directory> required")
+	}
+
+	if DstFileOrDir == "" {
+		// return fmt.Errorf("<new file/directory> required")
+		return fmt.Errorf("Fatal program bug! DstFileOrDir not set")
+	}
+
+	if SrcDir == "" && DoRecursive {
+		return fmt.Errorf("Fatal program bug! SrcDir not set")
+	}
+
+	if DstDir == "" && DoRecursive {
+		return fmt.Errorf("Fatal program bug! DstDir not set")
+	}
+
+	if SrcSvg == "" && !DoRecursive {
+		return fmt.Errorf("Fatal program bug! SrcSvg not set")
+	}
+
+	if DstSvg == "" && !DoRecursive {
+		return fmt.Errorf("Fatal program bug! DstSvg not set")
+	}
+
+	if ReAddNew == nil {
+		return fmt.Errorf("Fatal program bug! ReAddNew not set")
+	}
+
+	if ReToFind == nil {
+		return fmt.Errorf("Fatal program bug! ReToFind not set")
+	}
+
+	return nil
 }
 
 func _edit() error {
