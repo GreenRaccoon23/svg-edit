@@ -52,8 +52,8 @@ func init() {
 	}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
-	_formatGlobalVars()
-	// argsAnalyse()
+	_setSrcDst()
+	_setFindReplace()
 
 	_printFlags()
 	os.Exit(0)
@@ -67,9 +67,18 @@ func main() {
 	report()
 }
 
-func _formatGlobalVars() {
+func _setFindReplace() {
 
-	_setSrcDst()
+	oldString := strings.ToLower(ToFind)
+	if MaterialDesign[oldString] != nil {
+		ToFind = MaterialDesign[oldString]
+	}
+
+	newString := strings.ToLower(ToReplace)
+	if MaterialDesign[oldString] != nil {
+		ToReplace = MaterialDesign[newString]
+	}
+
 }
 
 func _setSrcDst() {
@@ -91,6 +100,39 @@ func _setSrcDst() {
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
 	}
+}
+
+func checkMethod() {
+	if DoRecursive == false {
+		editSingle()
+		return
+	}
+	Progress("Editing all svg files recursively...")
+	editRecursive()
+}
+
+/*func editLollipop() {
+	origDestination := DstDir
+	for k, v := range MaterialDesign {
+		ToReplace = v
+		DstDir = Concat(origDestination, k, v, "/")
+		if DoRecursive {
+			editRecursive()
+		} else {
+			editSingle()
+		}
+	}
+}
+*/
+func editSingle() {
+	in := SrcSvg
+	out := DstSvg
+	edit(in, out)
+}
+
+func editRecursive() {
+	err := filepath.Walk(SrcDir, WalkReplace)
+	LogErr(err)
 }
 
 // func argsAnalyse() {
@@ -161,53 +203,6 @@ func _setSrcDst() {
 // 	SrcDir = FmtDir(root)
 // 	DstDir = FmtDir(dest)
 // }
-
-func setFindReplace() {
-
-	oldString := strings.ToLower(ToFind)
-	if MaterialDesign[oldString] != nil {
-		ToFind = MaterialDesign[oldString]
-	}
-
-	newString := strings.ToLower(ToReplace)
-	if MaterialDesign[oldString] != nil {
-		ToReplace = MaterialDesign[newString]
-	}
-
-}
-
-func checkMethod() {
-	if DoRecursive == false {
-		editSingle()
-		return
-	}
-	Progress("Editing all svg files recursively...")
-	editRecursive()
-}
-
-/*func editLollipop() {
-	origDestination := DstDir
-	for k, v := range MaterialDesign {
-		ToReplace = v
-		DstDir = Concat(origDestination, k, v, "/")
-		if DoRecursive {
-			editRecursive()
-		} else {
-			editSingle()
-		}
-	}
-}
-*/
-func editSingle() {
-	in := SrcSvg
-	out := DstSvg
-	edit(in, out)
-}
-
-func editRecursive() {
-	err := filepath.Walk(SrcDir, WalkReplace)
-	LogErr(err)
-}
 
 func _printFlags() {
 	fmt.Println("r:", "DoRecursive:", DoRecursive)
