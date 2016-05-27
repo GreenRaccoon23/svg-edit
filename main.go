@@ -70,12 +70,12 @@ func main() {
 func _setFindReplace() {
 
 	oldString := strings.ToLower(ToFind)
-	if MaterialDesign[oldString] != nil {
+	if MaterialDesign[oldString] != "" {
 		ToFind = MaterialDesign[oldString]
 	}
 
 	newString := strings.ToLower(ToReplace)
-	if MaterialDesign[oldString] != nil {
+	if MaterialDesign[oldString] != "" {
 		ToReplace = MaterialDesign[newString]
 	}
 
