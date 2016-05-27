@@ -18,18 +18,18 @@ func concat(args ...string) string {
 	return b.String()
 }
 
-func FmtSvg(svg string) string {
+func addExt(path string, ext string) string {
 
-	if isEmpty := (svg == ""); isEmpty {
+	if path == "" {
 		return ""
 	}
 
-	trimmedExt := strings.TrimSuffix(svg, ".svg")
-	if hasExt := (trimmedExt != svg); hasExt {
-		return svg
+	trimmedExt := strings.TrimSuffix(path, ext)
+	if hasExt := (trimmedExt != path); hasExt {
+		return path
 	}
 
-	return concat(svg, ".svg")
+	return concat(path, ext)
 }
 
 func fmtDir(dir string) string {

@@ -94,8 +94,8 @@ func _setSrcDst() {
 		DstDir = fmtDir(DstFileOrDir)
 
 	case false:
-		SrcSvg = FmtSvg(SrcFileOrDir)
-		DstSvg = FmtSvg(DstFileOrDir)
+		SrcSvg = addExt(SrcFileOrDir, ".svg")
+		DstSvg = addExt(DstFileOrDir, ".svg")
 
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
@@ -179,8 +179,8 @@ func editt() {
 // 		c = fmtCopy(o)
 // 	}
 
-// 	SrcSvg = FmtSvg(o)
-// 	DstSvg = FmtSvg(c)
+// 	SrcSvg = addExt(o, ".svg")
+// 	DstSvg = addExt(c, ".svg")
 // 	SrcDir = filepath.Dir(SrcSvg)
 // 	DstDir = filepath.Dir(DstSvg)
 // }
