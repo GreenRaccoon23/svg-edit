@@ -119,7 +119,7 @@ func editt() {
 	origDestination := DstDir
 	for k, v := range MaterialDesign {
 		ToReplace = v
-		DstDir = Concat(origDestination, k, v, "/")
+		DstDir = concat(origDestination, k, v, "/")
 		if DoRecursive {
 			editRecursive()
 		} else {

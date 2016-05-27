@@ -32,7 +32,7 @@ func Slc(args ...string) []string {
 	return args
 }
 
-func Concat(args ...string) string {
+func concat(args ...string) string {
 	return Str(args)
 }
 
@@ -180,7 +180,7 @@ func FmtSvg(svg string) string {
 		return svg
 	}
 
-	return Concat(svg, ".svg")
+	return concat(svg, ".svg")
 }
 
 func FmtDir(dir string) string {
@@ -193,11 +193,11 @@ func FmtDir(dir string) string {
 	formatted := dir
 
 	if IsFirstLetter(dir, "/", "~") == false {
-		formatted = Concat(Pwd, "/", dir)
+		formatted = concat(Pwd, "/", dir)
 	}
 
 	if IsLastLetter(dir, "/") == false {
-		formatted = Concat(formatted, "/")
+		formatted = concat(formatted, "/")
 	}
 
 	if dir == "." {
@@ -211,7 +211,7 @@ func fmtCopy(s string) string {
 	if strings.HasSuffix(s, ".svg") {
 		return strings.Replace(s, ".svg", "-copy.svg", 1)
 	}
-	return Concat(s, "-copy.svg")
+	return concat(s, "-copy.svg")
 }
 
 func fmtDest(path string) (out string) {
@@ -232,7 +232,7 @@ func replace(s string) (replaced string) {
 func findReplacements(s string) (re *regexp.Regexp, replacement string) {
 	if DoAddNew && !strings.Contains(s, ToFind) {
 		re = regexp.MustCompile("(<svg )")
-		replacement = Concat(`${1}fill="`, ToReplace, `" `)
+		replacement = concat(`${1}fill="`, ToReplace, `" `)
 		return
 	}
 
