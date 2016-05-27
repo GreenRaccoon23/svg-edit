@@ -17,6 +17,7 @@ func parseArgs(boolFlagVars map[string]*bool, stringFlagVars map[string]*string,
 		stringFlagVars: stringFlagVars,
 		noFlagVars:     noFlagVars,
 	}
+	defer a._reset()
 
 	extraArgs = a._parseArgs()
 	return
@@ -45,6 +46,14 @@ type _argParser struct {
 	noFlagVars     []*string
 
 	_argsNotFlagged []string
+}
+
+func (a *_argParser) _reset() {
+	go func() { a.args = nil }()
+	go func() { a.boolFlagVars = nil }()
+	go func() { a.stringFlagVars = nil }()
+	go func() { a.noFlagVars = nil }()
+	go func() { a._argsNotFlagged = nil }()
 }
 
 func (a *_argParser) _parseArgs() []string {
