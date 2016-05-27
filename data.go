@@ -63,11 +63,18 @@ func LogErr(err error) {
 	Log(err)
 }
 
-func mkDir(dir string) {
-	if _, err := os.Stat(dir); err != nil {
+func mkDir(dir string) error {
+	if _pathExists(dir) {
 		err := os.MkdirAll(dir, 0777)
 		LogErr(err)
 	}
+}
+
+func _pathExists(path string) bool {
+	if _, err := os.Stat(dir); err != nil {
+		return false
+	}
+	return true
 }
 
 func walkReplace(path string, file os.FileInfo, err error) error {
