@@ -32,11 +32,11 @@ func Progress(current ...string) {
 	}
 }
 
-func Log(err error) {
+func Log(output ...interface{}) {
 	if DoShutUp {
 		return
 	}
-	fmt.Println(err)
+	fmt.Println(output...)
 }
 
 func LogErr(err error) {
