@@ -101,7 +101,7 @@ func fmtDst(path string) (dstPath string) {
 
 // 	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
 
-// 		if shouldAddFill := (DoAddNew && !_hasFill(fileContent)); shouldAddFill {
+// 		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
 // 			return ReAddNew, ToAdd, true
 // 		}
 
@@ -119,7 +119,7 @@ func replace(fileContent string) string {
 		return replaced
 	}
 
-	if shouldAddFill := (DoAddNew && !_hasFill(fileContent)); !shouldAddFill {
+	if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); !shouldAddFill {
 		return replaced
 	}
 
@@ -130,7 +130,7 @@ func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
 
 	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
 
-		if shouldAddFill := (DoAddNew && !_hasFill(fileContent)); shouldAddFill {
+		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
 			return ReAddNew, ToAdd, true
 		}
 

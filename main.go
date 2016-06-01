@@ -13,8 +13,7 @@ var (
 	Pwd string = getPwd()
 
 	DoRecursive bool
-	DoAddNew    bool
-	DoColor     bool
+	DoAddFill   bool
 	DoQuiet     bool
 	DoShutUp    bool
 
@@ -42,8 +41,8 @@ func init() {
 
 	boolFlagVars := map[string]*bool{
 		"r": &DoRecursive,
-		"a": &DoAddNew,
-		"c": &DoColor,
+		"a": &DoAddFill,
+		"c": &DoAddFill,
 		"q": &DoQuiet,
 		"Q": &DoShutUp,
 	}
@@ -84,8 +83,6 @@ func main() {
 }
 
 func _setFindReplace() {
-
-	DoColor = DoAddNew
 
 	ToFind = toMaterial(ToFind)
 	ToReplace = toMaterial(ToReplace)
@@ -178,6 +175,20 @@ func _edit() error {
 	return nil //why does Go require this?
 }
 
+func _printFlags() {
+	fmt.Println("r:", "DoRecursive:", DoRecursive)
+	fmt.Println("a:", "DoAddFill:", DoAddFill)
+	fmt.Println("q:", "DoQuiet:", DoQuiet)
+	fmt.Println("Q:", "DoShutUp:", DoShutUp)
+
+	fmt.Println("o:", "ToFind:", ToFind)
+	fmt.Println("n:", "ToReplace:", ToReplace)
+	fmt.Println("d:", "SrcDir:", SrcDir)
+
+	fmt.Println("_:", "SrcFileOrDir:", SrcFileOrDir)
+	fmt.Println("_:", "DstFileOrDir:", DstFileOrDir)
+}
+
 /*func editLollipop() {
 	origDestination := DstDir
 	for k, v := range MaterialDesign {
@@ -200,7 +211,7 @@ func _edit() error {
 
 // 	flag.StringVar(&ToFind, "o", "", "(old) string in svg file to replace")
 // 	flag.StringVar(&ToReplace, "n", "", "(new) string in svg file to replace with")
-// 	flag.BoolVar(&DoAddNew, "a", false, "add new string if the old one does not exist")
+// 	flag.BoolVar(&DoAddFill, "a", false, "add new string if the old one does not exist")
 // 	flag.BoolVar(&DoColor, "c", false, "Make a copy instead of editing file")
 // 	flag.BoolVar(&DoRecursive, "r", false, "walk recursively down to the bottom of the directory")
 // 	flag.BoolVar(&DoQuiet, "q", false, "don't list edited files")
@@ -260,18 +271,3 @@ func _edit() error {
 // 	SrcDir = fmtDir(root)
 // 	DstDir = fmtDir(dest)
 // }
-
-func _printFlags() {
-	fmt.Println("r:", "DoRecursive:", DoRecursive)
-	fmt.Println("a:", "DoAddNew:", DoAddNew)
-	fmt.Println("c:", "DoColor:", DoColor)
-	fmt.Println("q:", "DoQuiet:", DoQuiet)
-	fmt.Println("Q:", "DoShutUp:", DoShutUp)
-
-	fmt.Println("o:", "ToFind:", ToFind)
-	fmt.Println("n:", "ToReplace:", ToReplace)
-	fmt.Println("d:", "SrcDir:", SrcDir)
-
-	fmt.Println("_:", "SrcFileOrDir:", SrcFileOrDir)
-	fmt.Println("_:", "DstFileOrDir:", DstFileOrDir)
-}
