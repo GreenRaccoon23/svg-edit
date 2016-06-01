@@ -113,7 +113,7 @@ func fmtDst(path string) (dstPath string) {
 
 func replace(fileContent string) string {
 
-	replaced := ReToFind.ReplaceAllString(fileContent, ToReplace)
+	replaced := strings.Replace(fileContent, ToFind, ToReplace, -1)
 
 	if wasEdited := (replaced != fileContent); wasEdited {
 		return replaced
