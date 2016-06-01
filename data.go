@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -58,20 +57,6 @@ func getPwd() string {
 	}
 
 	return pwd
-}
-
-func Log(err error) {
-	if DoShutUp {
-		return
-	}
-	fmt.Println(err)
-}
-
-func LogErr(err error) {
-	if DoShutUp || err == nil {
-		return
-	}
-	Log(err)
 }
 
 func mkDir(dir string) error {

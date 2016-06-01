@@ -32,6 +32,20 @@ func Progress(current ...string) {
 	}
 }
 
+func Log(err error) {
+	if DoShutUp {
+		return
+	}
+	fmt.Println(err)
+}
+
+func LogErr(err error) {
+	if DoShutUp || err == nil {
+		return
+	}
+	Log(err)
+}
+
 func report() {
 	if DoShutUp {
 		return
