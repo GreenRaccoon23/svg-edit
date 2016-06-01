@@ -5,7 +5,6 @@ import (
 	"log"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/fatih/color"
 )
@@ -86,19 +85,10 @@ func main() {
 
 func _setFindReplace() {
 
-	if DoAddNew {
-		DoColor = true
-	}
+	DoColor = DoAddNew
 
-	oldString := strings.ToLower(ToFind)
-	if MaterialDesign[oldString] != "" {
-		ToFind = MaterialDesign[oldString]
-	}
-
-	newString := strings.ToLower(ToReplace)
-	if MaterialDesign[oldString] != "" {
-		ToReplace = MaterialDesign[newString]
-	}
+	ToFind = toMaterial(ToFind)
+	ToReplace = toMaterial(ToReplace)
 
 	ReToFind = regexp.MustCompile(ToFind)
 	ToAdd = concat(`${1} fill="`, ToReplace, `"`)

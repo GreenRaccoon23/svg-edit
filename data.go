@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var (
@@ -36,6 +37,18 @@ var (
 		"archblue":   "#1793D1",
 	}
 )
+
+func toMaterial(s string) string {
+
+	cleaned := strings.ToLower(s)
+	hex := MaterialDesign[cleaned]
+
+	if isColorAbbr := (hex != ""); isColorAbbr {
+		return hex
+	}
+
+	return s
+}
 
 func getPwd() string {
 
