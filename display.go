@@ -22,18 +22,8 @@ var (
 	BBlack   = color.New(color.Bold, color.FgBlack)
 )
 
-func Progress(current ...string) {
-	if DoShutUp || DoQuiet {
-		return
-	}
-	for _, c := range current {
-		fmt.Printf("%v ", c)
-		fmt.Println()
-	}
-}
-
 func Log(output ...interface{}) {
-	if DoShutUp {
+	if DoShutUp || DoQuiet {
 		return
 	}
 	fmt.Println(output...)

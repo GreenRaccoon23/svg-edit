@@ -165,7 +165,7 @@ func _edit() error {
 	switch DoRecursive {
 
 	case true:
-		Progress("Editing all svg files recursively...")
+		Log("Editing all svg files recursively...")
 		return filepath.Walk(SrcDir, walkReplace)
 
 	case false:

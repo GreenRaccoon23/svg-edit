@@ -149,7 +149,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 
 	TotalEdited++
-	Progress(dstPath)
+	Log(dstPath)
 
 	return nil
 }
