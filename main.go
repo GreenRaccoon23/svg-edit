@@ -83,7 +83,7 @@ func main() {
 	}
 
 	if err := _edit(); err != nil {
-		Log(err)
+		LogErr(err)
 	}
 
 	report()
