@@ -85,7 +85,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	fileBytes, err := ioutil.ReadFile(srcPath)
 	if err != nil {
 
-		if len(fileBytes) == 0 {
+		if isEmpty := (len(fileBytes) == 0); isEmpty {
 			return err
 		}
 
@@ -93,8 +93,11 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 
 	var editedFileBytes []byte
-	_replace(&fileBytes, &editedFileBytes)
-	if len(editedFileBytes) == 0 || bytes.Equal(editedFileBytes, fileBytes) {
+	if wasEdited := _editFileBytes(&fileBytes, &editedFileBytes); !wasEdited {
+		return nil
+	}
+
+	if len(editedFileBytes) == 0 {
 		return nil
 	}
 
@@ -180,12 +183,10 @@ func _stringToFile(editedFileContent *string, newFile *os.File) error {
 	return newFile.Sync()
 }
 
-func _replace(fileBytes *[]byte, editedFileBytes *[]byte) {
+func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
 
-	*editedFileBytes = bytes.Replace(*fileBytes, ToFindBytes, ToReplaceBytes, -1)
-	// *editedFileBytes = ReToFind.ReplaceAll(*fileBytes, ToReplaceBytes)
-
-	if wasEdited := (!bytes.Equal(*editedFileBytes, *fileBytes)); wasEdited {
+	wasEdited = _replace(editedFileBytes, fileBytes)
+	if wasEdited {
 		return
 	}
 
@@ -193,7 +194,25 @@ func _replace(fileBytes *[]byte, editedFileBytes *[]byte) {
 		return
 	}
 
+	wasEdited = _addFill(editedFileBytes, fileBytes)
+	return
+}
+
+func _replace(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
+
+	*editedFileBytes = bytes.Replace(*fileBytes, ToFindBytes, ToReplaceBytes, -1)
+	// *editedFileBytes = ReToFind.ReplaceAll(*fileBytes, ToReplaceBytes)
+
+	wasEdited = (!bytes.Equal(*editedFileBytes, *fileBytes))
+	return
+}
+
+func _addFill(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
+
 	*editedFileBytes = ReAddFill.ReplaceAll(*fileBytes, ToFillBytes)
+
+	wasEdited = (!bytes.Equal(*editedFileBytes, *fileBytes))
+	return
 }
 
 func _hasFill(fileBytes *[]byte) bool {
