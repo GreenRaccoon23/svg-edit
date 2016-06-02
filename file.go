@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func getPwd() string {
@@ -82,20 +82,19 @@ func editFileFromPath(dstPath string, srcPath string) error {
 		return nil
 	}
 
-	var fileContent string
-	if err := _fileToString(srcPath, &fileContent); err != nil {
+	fileBytes, err := ioutil.ReadFile(srcPath)
+	if err != nil {
 
-		if fileContent == "" {
+		if len(fileBytes) == 0 {
 			return err
 		}
 
-		LogErr(err)
 		return _copyFromPath(dstPath, srcPath)
 	}
 
-	var editedFileContent string
-	_replace(&fileContent, &editedFileContent)
-	if editedFileContent == "" || editedFileContent == fileContent {
+	var editedFileBytes []byte
+	_replace(&fileBytes, &editedFileBytes)
+	if len(editedFileBytes) == 0 || bytes.Equal(editedFileBytes, fileBytes) {
 		return nil
 	}
 
@@ -105,7 +104,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 	defer newFile.Close()
 
-	if err = _stringToFile(&editedFileContent, newFile); err != nil {
+	if err = _bytesToFile(&editedFileBytes, newFile); err != nil {
 		return err
 	}
 
@@ -181,85 +180,32 @@ func _stringToFile(editedFileContent *string, newFile *os.File) error {
 	return newFile.Sync()
 }
 
-func _replace(fileContent *string, fileContentEdited *string) {
+func _replace(fileBytes *[]byte, editedFileBytes *[]byte) {
 
-	// *fileContentEdited = strings.Replace(*fileContent, ToFind, ToReplace, -1)
-	*fileContentEdited = ReToFind.ReplaceAllString(*fileContent, ToReplace)
+	*editedFileBytes = bytes.Replace(*fileBytes, ToFindBytes, ToReplaceBytes, -1)
+	// *editedFileBytes = ReToFind.ReplaceAll(*fileBytes, ToReplaceBytes)
 
-	if wasEdited := (*fileContentEdited != *fileContent); wasEdited {
+	if wasEdited := (!bytes.Equal(*editedFileBytes, *fileBytes)); wasEdited {
 		return
 	}
 
-	if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); !shouldAddFill {
+	if shouldAddFill := (DoAddFill && !_hasFill(fileBytes)); !shouldAddFill {
 		return
 	}
 
-	*fileContentEdited = ReAddFill.ReplaceAllString(*fileContent, ToFill)
+	*editedFileBytes = ReAddFill.ReplaceAll(*fileBytes, ToFillBytes)
 }
 
-func _hasFill(fileContent *string) bool {
-	return strings.Contains(*fileContent, "fill=") ||
-		strings.Contains(*fileContent, "fill:")
+func _hasFill(fileBytes *[]byte) bool {
+	return bytes.Contains(*fileBytes, []byte("fill=")) ||
+		bytes.Contains(*fileBytes, []byte("fill:"))
 }
 
-// func _replace(fileContent string) string {
+func _bytesToFile(editedFileBytes *[]byte, newFile *os.File) error {
 
-//  re, replacement, needsToBeEdited := _getFindAndReplace(fileContent)
-//  if !needsToBeEdited {
-//      return fileContent
-//  }
+	if _, err := newFile.Write(*editedFileBytes); err != nil {
+		return err
+	}
 
-//  return re.ReplaceAllString(fileContent, replacement)
-// }
-
-// func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
-
-//  if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
-
-//      if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
-//          return ReAddFill, ToFill, true
-//      }
-
-//      return nil, "", false
-//  }
-
-//  return ReToFind, ToReplace, true
-// }
-
-// func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
-
-// 	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
-
-// 		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
-// 			return ReAddFill, ToFill, true
-// 		}
-
-// 		return nil, "", false
-// 	}
-
-// 	return ReToFind, ToReplace, true
-// }
-
-// func _containsToFind(fileContent string) bool {
-// 	return strings.Contains(fileContent, ToFind)
-// }
-
-/*func _copyFromPath(srcPath, dstPath string) error {
-    src, err := os.Open(srcPath)
-    if err != nil {
-        return err
-    }
-    defer src.Close()
-
-    dst, err := os.Create(dstPath)
-    if err != nil {
-        return err
-    }
-    defer dst.Close()
-
-    _, err = io.Copy(dst, src)
-    if err != nil {
-        return err
-    }
-    return
-}*/
+	return newFile.Sync()
+}
