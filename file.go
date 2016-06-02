@@ -34,11 +34,11 @@ func getSvgPaths() (svgPaths []string) {
 
 func isEditable(fi os.FileInfo) bool {
 
-	if filepath.Ext(fi.Name()) != ".svg" {
+	if !fi.Mode().IsRegular() {
 		return false
 	}
 
-	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+	if filepath.Ext(fi.Name()) != ".svg" {
 		return false
 	}
 
