@@ -95,7 +95,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 
 func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
 
-	wasEdited = _replace(editedFileBytes, fileBytes)
+	wasEdited = _replace(fileBytes, editedFileBytes)
 	if wasEdited {
 		return
 	}
@@ -104,7 +104,7 @@ func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool)
 		return
 	}
 
-	wasEdited = _addFill(editedFileBytes, fileBytes)
+	wasEdited = _addFill(fileBytes, editedFileBytes)
 	return
 }
 
