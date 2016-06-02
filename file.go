@@ -83,13 +83,13 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 
 	fileBytes, err := ioutil.ReadFile(srcPath)
-	if err != nil {
-
-		if isEmpty := (len(fileBytes) == 0); isEmpty {
-			return err
-		}
-
+	if failedToReadFile := (err != nil); failedToReadFile {
+		LogErr(err)
 		return _copyFromPath(dstPath, srcPath)
+	}
+
+	if isEmptyFile := (len(fileBytes) == 0); isEmptyFile {
+		return nil
 	}
 
 	var editedFileBytes []byte
@@ -97,7 +97,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 		return nil
 	}
 
-	if len(editedFileBytes) == 0 {
+	if somethingTerribleHappened := (len(editedFileBytes) == 0); somethingTerribleHappened {
 		return nil
 	}
 
