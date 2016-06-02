@@ -132,7 +132,7 @@ func _setFindReplace() {
 	ToFill = concat(`${1} fill="`, ToReplace, `"`)
 
 	ToFindBytes = []byte(ToFind)
-	ToReplaceBytes = []byte(ToReplaceBytes)
+	ToReplaceBytes = []byte(ToReplace)
 
 	ToFillBytes = toBytes(`${1} fill="`, ToReplace, `"`)
 }
