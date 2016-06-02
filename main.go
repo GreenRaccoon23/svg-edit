@@ -134,7 +134,7 @@ func _setFindReplace() {
 	ToFindBytes = []byte(ToFind)
 	ToReplaceBytes = []byte(ToReplaceBytes)
 
-	ToFillBytes = []byte(ToFill)
+	ToFillBytes = toBytes(`${1} fill="`, ToReplace, `"`)
 }
 
 func _verifyGlobalVars() error {

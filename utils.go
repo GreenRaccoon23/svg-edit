@@ -17,6 +17,18 @@ func concat(args ...string) string {
 	return b.String()
 }
 
+func toBytes(args ...string) []byte {
+
+	var b bytes.Buffer
+	defer b.Reset()
+
+	for _, s := range args {
+		b.WriteString(s)
+	}
+
+	return b.Bytes()
+}
+
 func addExt(path string, ext string) string {
 
 	if path == "" {
