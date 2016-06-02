@@ -41,9 +41,9 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 	return nil
 }
 
-func _mkDstDir(path string) error {
-	dir := filepath.Dir(path)
-	return mkDir(dir)
+func _mkDstDir(dstPath string) error {
+	dstDir := filepath.Dir(dstPath)
+	return mkDir(dstDir)
 }
 
 func editFileFromPath(dstPath string, srcPath string) error {
