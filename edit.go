@@ -31,7 +31,7 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 		return nil
 	}
 
-	if isPathSymlink(path) {
+	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
 		return nil
 	}
 
