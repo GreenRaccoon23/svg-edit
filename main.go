@@ -30,13 +30,10 @@ var (
 
 	SrcDstSame bool
 
-	ReAddFill *regexp.Regexp = regexp.MustCompile("(<svg)")
-	ReToFind  *regexp.Regexp
-
-	ToFill string
-
 	ToFindBytes    []byte
 	ToReplaceBytes []byte
+
+	ReAddFill *regexp.Regexp = regexp.MustCompile("(<svg)")
 
 	ToFillBytes []byte
 
@@ -128,9 +125,6 @@ func _setFindReplace() {
 	ToFind = toMaterial(ToFind)
 	ToReplace = toMaterial(ToReplace)
 
-	ReToFind = regexp.MustCompile(ToFind)
-	ToFill = concat(`${1} fill="`, ToReplace, `"`)
-
 	ToFindBytes = []byte(ToFind)
 	ToReplaceBytes = []byte(ToReplace)
 
@@ -174,10 +168,6 @@ func _verifyGlobalVars() error {
 
 	if ReAddFill == nil {
 		return fmt.Errorf("Fatal program bug! ReAddFill not set")
-	}
-
-	if ReToFind == nil {
-		return fmt.Errorf("Fatal program bug! ReToFind not set")
 	}
 
 	return nil
