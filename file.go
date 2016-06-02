@@ -39,8 +39,10 @@ func isEditable(fi os.FileInfo) bool {
 	}
 
 	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
-		return nil
+		return false
 	}
+
+	return true
 }
 
 func mkDir(path string) error {
