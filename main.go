@@ -32,7 +32,13 @@ var (
 
 	ReAddFill *regexp.Regexp = regexp.MustCompile("(<svg)")
 	ReToFind  *regexp.Regexp
-	ToFill    string
+
+	ToFill string
+
+	ToFindBytes    []byte
+	ToReplaceBytes []byte
+
+	ToFillBytes []byte
 
 	TotalEdited int
 )
@@ -124,6 +130,11 @@ func _setFindReplace() {
 
 	ReToFind = regexp.MustCompile(ToFind)
 	ToFill = concat(`${1} fill="`, ToReplace, `"`)
+
+	ToFindBytes = []byte(ToFind)
+	ToReplaceBytes = []byte(ToReplaceBytes)
+
+	ToFillBytes = []byte(ToFill)
 }
 
 func _verifyGlobalVars() error {
