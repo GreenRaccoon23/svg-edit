@@ -186,12 +186,10 @@ func _verifyGlobalVars() error {
 func _edit() error {
 
 	switch DoRecursive {
-
 	case true:
-		return filepath.Walk(SrcDir, walkReplace)
-
+		return editRecursive()
 	case false:
-		return editFileFromPath(DstSvg, SrcSvg)
+		return editOne()
 	}
 
 	return nil //why does Go require this?

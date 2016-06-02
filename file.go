@@ -19,6 +19,14 @@ func getPwd() string {
 	return pwd
 }
 
+func editRecursive() error {
+	return filepath.Walk(SrcDir, _walkReplace)
+}
+
+func editOne() error {
+	return editFileFromPath(DstSvg, SrcSvg)
+}
+
 func mkDir(path string) error {
 	if _pathExists(path) {
 		return nil
@@ -33,7 +41,7 @@ func _pathExists(path string) bool {
 	return true
 }
 
-func walkReplace(path string, fi os.FileInfo, err error) error {
+func _walkReplace(path string, fi os.FileInfo, err error) error {
 
 	if err != nil {
 		return err
