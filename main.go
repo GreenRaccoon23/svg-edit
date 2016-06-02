@@ -89,15 +89,6 @@ func _setLogger() {
 	}
 }
 
-func _setFindReplace() {
-
-	ToFind = toMaterial(ToFind)
-	ToReplace = toMaterial(ToReplace)
-
-	ReToFind = regexp.MustCompile(ToFind)
-	ToAdd = concat(`${1} fill="`, ToReplace, `"`)
-}
-
 func _setSrcDst() {
 
 	if DstFileOrDir == "" {
@@ -119,6 +110,15 @@ func _setSrcDst() {
 		SrcDir = filepath.Dir(SrcSvg)
 		DstDir = filepath.Dir(DstSvg)
 	}
+}
+
+func _setFindReplace() {
+
+	ToFind = toMaterial(ToFind)
+	ToReplace = toMaterial(ToReplace)
+
+	ReToFind = regexp.MustCompile(ToFind)
+	ToAdd = concat(`${1} fill="`, ToReplace, `"`)
 }
 
 func _verifyGlobalVars() error {
