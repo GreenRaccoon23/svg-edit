@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"regexp"
 	"strings"
 	"testing"
@@ -43,6 +44,18 @@ func BenchmarkStringsReplaceOnce(b *testing.B) {
 func BenchmarkRegexpReplace(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		ReToFind.ReplaceAllString(TestFileContent, ToReplace)
+	}
+}
+
+func BenchmarkBytesReplaceAll(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		bytes.Replace(TestFileContentBytes, ToFindBytes, ToReplaceBytes, -1)
+	}
+}
+
+func BenchmarkBytesReplaceOnce(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		bytes.Replace(TestFileContentBytes, ToFindBytes, ToReplaceBytes, 1)
 	}
 }
 
