@@ -209,6 +209,10 @@ func _printFlags() {
 
 	fmt.Println("_:", "SrcFileOrDir:", SrcFileOrDir)
 	fmt.Println("_:", "DstFileOrDir:", DstFileOrDir)
+
+	fmt.Println("_:", "DstDir:", DstDir)
+	fmt.Println("_:", "ToFindBytes:", string(ToFindBytes))
+	fmt.Println("_:", "ToReplaceBytes:", string(ToReplaceBytes))
 }
 
 /*func editLollipop() {
