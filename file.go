@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func getPwd() string {
@@ -14,6 +15,25 @@ func getPwd() string {
 	}
 
 	return pwd
+}
+
+func getSvgPaths() (svgPaths []string) {
+
+	filepath.Walk(SrcDir, func(path string, fi os.FileInfo, err error) error {
+
+		if filepath.Ext(path) != ".svg" {
+			return nil
+		}
+
+		if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+			return nil
+		}
+
+		svgPaths = append(svgPaths, path)
+		return nil
+	})
+
+	return
 }
 
 func mkDir(path string) error {

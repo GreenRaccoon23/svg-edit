@@ -6,10 +6,38 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 func editRecursive() error {
-	return filepath.Walk(SrcDir, _walkReplace)
+	return editRecursive2()
+	// return filepath.Walk(SrcDir, _walkReplace)
+}
+
+func editRecursive2() error {
+
+	svgPaths := getSvgPaths()
+	lenSvgPaths := len(svgPaths)
+
+	var wg sync.WaitGroup
+	wg.Add(lenSvgPaths)
+
+	for i := 0; i < lenSvgPaths; i++ {
+		go func(i int) {
+			defer wg.Done()
+
+			svgPath := svgPaths[i]
+
+			err := _editSvg(svgPath)
+			if err != nil {
+				LogErr(err)
+			}
+		}(i)
+	}
+
+	wg.Wait()
+
+	return nil
 }
 
 func editOne() error {
@@ -46,6 +74,22 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 	if err = editFileFromPath(dstPath, srcPath); err != nil {
 		LogErr(err)
 		return nil
+	}
+
+	return nil
+}
+
+func _editSvg(svgPath string) error {
+
+	dstPath := fmtDst(svgPath)
+	if err := _mkDstDir(dstPath); err != nil {
+		return err
+	}
+
+	srcPath := svgPath
+
+	if err := editFileFromPath(dstPath, srcPath); err != nil {
+		return err
 	}
 
 	return nil
