@@ -111,8 +111,6 @@ func _setSrcDst() {
 		SrcDstSame = (SrcDir == DstDir)
 
 	case false:
-		SrcSvg = addExt(SrcFileOrDir, ".svg")
-		DstSvg = addExt(DstFileOrDir, ".svg")
 		SrcDstSame = (SrcSvg == DstSvg)
 
 		SrcDir = filepath.Dir(SrcSvg)

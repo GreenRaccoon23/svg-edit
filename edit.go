@@ -11,6 +11,10 @@ import (
 
 func editOne() error {
 
+	if filepath.Ext(SrcSvg) != ".svg" {
+		return fmt.Errorf("%v does not appear to be an svg", SrcSvg)
+	}
+
 	if isPathSymlink(SrcSvg) {
 		return fmt.Errorf("Cannot edit a symlink")
 	}

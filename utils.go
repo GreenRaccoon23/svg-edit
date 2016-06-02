@@ -31,19 +31,6 @@ func toBytes(args ...string) []byte {
 	return b.Bytes()
 }
 
-func addExt(path string, ext string) string {
-
-	if path == "" {
-		return ""
-	}
-
-	if hasExt := strings.HasSuffix(path, ext); hasExt {
-		return path
-	}
-
-	return concat(path, ext)
-}
-
 func fmtDir(dir string) string {
 
 	formatted, err := filepath.Abs(dir)
