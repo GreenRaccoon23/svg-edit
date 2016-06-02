@@ -166,6 +166,18 @@ func _verifyGlobalVars() error {
 		return fmt.Errorf("Fatal program bug! DstSvg not set")
 	}
 
+	if len(ToFindBytes) == 0 {
+		return fmt.Errorf("Fatal program bug! ToFindBytes not set")
+	}
+
+	if len(ToReplaceBytes) == 0 {
+		return fmt.Errorf("Fatal program bug! ToReplaceBytes not set")
+	}
+
+	if len(ToFillBytes) <= 12 && ToReplace != "" {
+		return fmt.Errorf("Fatal program bug! ToFillBytes not set")
+	}
+
 	if ReAddFill == nil {
 		return fmt.Errorf("Fatal program bug! ReAddFill not set")
 	}
