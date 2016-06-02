@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 )
 
@@ -182,25 +181,25 @@ func _fileToString(path string, fileContent *string) error {
 	return nil
 }
 
-/*func _copyFromPath(srcPath, dstPath string) error {
-    src, err := os.Open(srcPath)
-    if err != nil {
-        return err
-    }
-    defer src.Close()
+func _replace(fileContent string, fileContentEdited *string) {
 
-    dst, err := os.Create(dstPath)
-    if err != nil {
-        return err
-    }
-    defer dst.Close()
+	*fileContentEdited = strings.Replace(fileContent, ToFind, ToReplace, -1)
 
-    _, err = io.Copy(dst, src)
-    if err != nil {
-        return err
-    }
-    return
-}*/
+	if wasEdited := (*fileContentEdited != fileContent); wasEdited {
+		return
+	}
+
+	if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); !shouldAddFill {
+		return
+	}
+
+	*fileContentEdited = ReAddNew.ReplaceAllString(fileContent, ToAdd)
+}
+
+func _hasFill(fileContent string) bool {
+	return strings.Contains(fileContent, "fill=") ||
+		strings.Contains(fileContent, "fill:")
+}
 
 // func _replace(fileContent string) string {
 
@@ -226,40 +225,40 @@ func _fileToString(path string, fileContent *string) error {
 //  return ReToFind, ToReplace, true
 // }
 
-func _replace(fileContent string, fileContentEdited *string) {
+// func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
 
-	*fileContentEdited = strings.Replace(fileContent, ToFind, ToReplace, -1)
+// 	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
 
-	if wasEdited := (*fileContentEdited != fileContent); wasEdited {
-		return
-	}
+// 		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
+// 			return ReAddNew, ToAdd, true
+// 		}
 
-	if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); !shouldAddFill {
-		return
-	}
+// 		return nil, "", false
+// 	}
 
-	*fileContentEdited = ReAddNew.ReplaceAllString(fileContent, ToAdd)
-}
+// 	return ReToFind, ToReplace, true
+// }
 
-func _getFindAndReplace(fileContent string) (*regexp.Regexp, string, bool) {
+// func _containsToFind(fileContent string) bool {
+// 	return strings.Contains(fileContent, ToFind)
+// }
 
-	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
+/*func _copyFromPath(srcPath, dstPath string) error {
+    src, err := os.Open(srcPath)
+    if err != nil {
+        return err
+    }
+    defer src.Close()
 
-		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
-			return ReAddNew, ToAdd, true
-		}
+    dst, err := os.Create(dstPath)
+    if err != nil {
+        return err
+    }
+    defer dst.Close()
 
-		return nil, "", false
-	}
-
-	return ReToFind, ToReplace, true
-}
-
-func _containsToFind(fileContent string) bool {
-	return strings.Contains(fileContent, ToFind)
-}
-
-func _hasFill(fileContent string) bool {
-	return strings.Contains(fileContent, "fill=") ||
-		strings.Contains(fileContent, "fill:")
-}
+    _, err = io.Copy(dst, src)
+    if err != nil {
+        return err
+    }
+    return
+}*/
