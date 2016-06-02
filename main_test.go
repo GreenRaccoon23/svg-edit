@@ -31,6 +31,12 @@ func BenchmarkStringsReplaceOnce(b *testing.B) {
 
 func BenchmarkRegexpReplace(b *testing.B) {
 	for i := 0; i < b.N; i++ {
+		ReToFind.ReplaceAllString(TestFileContent, ToReplace)
+	}
+}
+
+func BenchmarkRegexpReplaceAddFill(b *testing.B) {
+	for i := 0; i < b.N; i++ {
 		ReAddFill.ReplaceAllString(TestFileContent, ToFill)
 	}
 }
