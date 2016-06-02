@@ -21,11 +21,7 @@ func getSvgPaths() (svgPaths []string) {
 
 	filepath.Walk(SrcDir, func(path string, fi os.FileInfo, err error) error {
 
-		if filepath.Ext(path) != ".svg" {
-			return nil
-		}
-
-		if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+		if !isEditable(fi) {
 			return nil
 		}
 
@@ -34,6 +30,17 @@ func getSvgPaths() (svgPaths []string) {
 	})
 
 	return
+}
+
+func isEditable(fi os.FileInfo) bool {
+
+	if filepath.Ext(fi.Name()) != ".svg" {
+		return false
+	}
+
+	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+		return nil
+	}
 }
 
 func mkDir(path string) error {

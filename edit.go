@@ -162,11 +162,7 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 		return err
 	}
 
-	if filepath.Ext(path) != ".svg" {
-		return nil
-	}
-
-	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+	if !isEditable(fi) {
 		return nil
 	}
 
