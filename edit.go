@@ -32,7 +32,6 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 	}
 
 	if isPathSymlink(path) {
-		// return copySymlinkFromPath(dstPath, srcPath)
 		return nil
 	}
 

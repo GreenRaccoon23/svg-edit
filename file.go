@@ -66,22 +66,3 @@ func _copyFile(dst *os.File, src *os.File) error {
 
 	return dst.Sync()
 }
-
-// func copySymlinkFromPath(dstPath string, srcPath string) error {
-
-//  if SrcDstSame {
-//      return nil
-//  }
-
-//  linkTarget, err := os.Readlink(srcPath)
-//  if err != nil {
-//      return err
-//  }
-
-//  _, err = filepath.Rel(linkTarget, SrcDir)
-//  if isUnderSrcDir := (err == nil); !isUnderSrcDir {
-//      return nil
-//  }
-
-//  return _copyFromPath(dstPath, srcPath)
-// }
