@@ -30,9 +30,9 @@ var (
 
 	SrcDstSame bool
 
-	ReAddNew *regexp.Regexp = regexp.MustCompile("(<svg)")
-	ReToFind *regexp.Regexp
-	ToAdd    string
+	ReAddFill *regexp.Regexp = regexp.MustCompile("(<svg)")
+	ReToFind  *regexp.Regexp
+	ToFill    string
 
 	TotalEdited int
 )
@@ -123,7 +123,7 @@ func _setFindReplace() {
 	ToReplace = toMaterial(ToReplace)
 
 	ReToFind = regexp.MustCompile(ToFind)
-	ToAdd = concat(`${1} fill="`, ToReplace, `"`)
+	ToFill = concat(`${1} fill="`, ToReplace, `"`)
 }
 
 func _verifyGlobalVars() error {
@@ -161,8 +161,8 @@ func _verifyGlobalVars() error {
 		return fmt.Errorf("Fatal program bug! DstSvg not set")
 	}
 
-	if ReAddNew == nil {
-		return fmt.Errorf("Fatal program bug! ReAddNew not set")
+	if ReAddFill == nil {
+		return fmt.Errorf("Fatal program bug! ReAddFill not set")
 	}
 
 	if ReToFind == nil {

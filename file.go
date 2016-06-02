@@ -193,7 +193,7 @@ func _replace(fileContent *string, fileContentEdited *string) {
 		return
 	}
 
-	*fileContentEdited = ReAddNew.ReplaceAllString(*fileContent, ToAdd)
+	*fileContentEdited = ReAddFill.ReplaceAllString(*fileContent, ToFill)
 }
 
 func _hasFill(fileContent *string) bool {
@@ -216,7 +216,7 @@ func _hasFill(fileContent *string) bool {
 //  if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
 
 //      if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
-//          return ReAddNew, ToAdd, true
+//          return ReAddFill, ToFill, true
 //      }
 
 //      return nil, "", false
@@ -230,7 +230,7 @@ func _hasFill(fileContent *string) bool {
 // 	if nothingToReplace := (!_containsToFind(fileContent)); nothingToReplace {
 
 // 		if shouldAddFill := (DoAddFill && !_hasFill(fileContent)); shouldAddFill {
-// 			return ReAddNew, ToAdd, true
+// 			return ReAddFill, ToFill, true
 // 		}
 
 // 		return nil, "", false
