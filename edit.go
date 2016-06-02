@@ -48,15 +48,15 @@ func _mkDstDir(path string) error {
 
 func editFileFromPath(dstPath string, srcPath string) error {
 
-	if _isPathSymlink(srcPath) {
-		// return _copySymlinkFromPath(dstPath, srcPath)
+	if isPathSymlink(srcPath) {
+		// return copySymlinkFromPath(dstPath, srcPath)
 		return nil
 	}
 
 	fileBytes, err := ioutil.ReadFile(srcPath)
 	if failedToReadFile := (err != nil); failedToReadFile {
 		LogErr(err)
-		return _copyFromPath(dstPath, srcPath)
+		return copyFromPath(dstPath, srcPath)
 	}
 
 	if isEmptyFile := (len(fileBytes) == 0); isEmptyFile {

@@ -30,7 +30,7 @@ func _pathExists(path string) bool {
 	return true
 }
 
-func _isPathSymlink(path string) bool {
+func isPathSymlink(path string) bool {
 
 	fi, err := os.Lstat(path)
 	if err != nil {
@@ -41,7 +41,7 @@ func _isPathSymlink(path string) bool {
 	return (fi.Mode()&os.ModeSymlink == os.ModeSymlink)
 }
 
-func _copyFromPath(dstPath string, srcPath string) error {
+func copyFromPath(dstPath string, srcPath string) error {
 
 	src, err := os.Open(srcPath)
 	if err != nil {
@@ -67,7 +67,7 @@ func _copyFile(dst *os.File, src *os.File) error {
 	return dst.Sync()
 }
 
-// func _copySymlinkFromPath(dstPath string, srcPath string) error {
+// func copySymlinkFromPath(dstPath string, srcPath string) error {
 
 //  if SrcDstSame {
 //      return nil
