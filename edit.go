@@ -9,12 +9,21 @@ import (
 	"sync"
 )
 
-func editRecursive() error {
-	return editRecursive2()
-	// return filepath.Walk(SrcDir, _walkReplace)
+func editOne() error {
+
+	if isPathSymlink(SrcSvg) {
+		return fmt.Errorf("Cannot edit a symlink")
+	}
+
+	return editFileFromPath(DstSvg, SrcSvg)
 }
 
-func editRecursive2() error {
+func editRecursive() error {
+	return editRecursiveFast()
+	// return editRecursiveSlow()
+}
+
+func editRecursiveFast() error {
 
 	svgPaths := getSvgPaths()
 	lenSvgPaths := len(svgPaths)
@@ -36,45 +45,6 @@ func editRecursive2() error {
 	}
 
 	wg.Wait()
-
-	return nil
-}
-
-func editOne() error {
-
-	if isPathSymlink(SrcSvg) {
-		return fmt.Errorf("Cannot edit a symlink")
-	}
-
-	return editFileFromPath(DstSvg, SrcSvg)
-}
-
-func _walkReplace(path string, fi os.FileInfo, err error) error {
-
-	if err != nil {
-		return err
-	}
-
-	if filepath.Ext(path) != ".svg" {
-		return nil
-	}
-
-	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
-		return nil
-	}
-
-	dstPath := fmtDst(path)
-	if err = _mkDstDir(dstPath); err != nil {
-		LogErr(err)
-		return nil
-	}
-
-	srcPath := path
-
-	if err = editFileFromPath(dstPath, srcPath); err != nil {
-		LogErr(err)
-		return nil
-	}
 
 	return nil
 }
@@ -155,7 +125,6 @@ func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool)
 func _replace(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
 
 	*editedFileBytes = bytes.Replace(*fileBytes, ToFindBytes, ToReplaceBytes, -1)
-	// *editedFileBytes = ReToFind.ReplaceAll(*fileBytes, ToReplaceBytes)
 
 	wasEdited = (!bytes.Equal(*editedFileBytes, *fileBytes))
 	return
@@ -181,4 +150,38 @@ func _bytesToFile(editedFileBytes *[]byte, newFile *os.File) error {
 	}
 
 	return newFile.Sync()
+}
+
+func editRecursiveSlow() error {
+	return filepath.Walk(SrcDir, _walkReplace)
+}
+
+func _walkReplace(path string, fi os.FileInfo, err error) error {
+
+	if err != nil {
+		return err
+	}
+
+	if filepath.Ext(path) != ".svg" {
+		return nil
+	}
+
+	if isSymlink := (fi.Mode()&os.ModeSymlink == os.ModeSymlink); isSymlink {
+		return nil
+	}
+
+	dstPath := fmtDst(path)
+	if err = _mkDstDir(dstPath); err != nil {
+		LogErr(err)
+		return nil
+	}
+
+	srcPath := path
+
+	if err = editFileFromPath(dstPath, srcPath); err != nil {
+		LogErr(err)
+		return nil
+	}
+
+	return nil
 }
