@@ -21,18 +21,12 @@ var (
 	BWhite   = color.New(color.Bold, color.FgWhite)
 	BBlack   = color.New(color.Bold, color.FgBlack)
 
-	Log = fmt.Println
+	Log    = fmt.Println
+	LogErr = fmt.Println
 )
 
 func LogNoop(x ...interface{}) (int, error) {
 	return 0, nil
-}
-
-func LogErr(err error) {
-	if DoShutUp || err == nil {
-		return
-	}
-	Log(err)
 }
 
 func report() {

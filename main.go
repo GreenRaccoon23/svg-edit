@@ -84,8 +84,13 @@ func main() {
 }
 
 func _setLogger() {
-	if DoShutUp || DoQuiet {
+	if DoQuiet {
 		Log = LogNoop
+	}
+
+	if DoShutUp {
+		Log = LogNoop
+		LogErr = LogNoop
 	}
 }
 
