@@ -25,7 +25,6 @@ func editOne() error {
 
 func editRecursive() error {
 	return _editRecursiveFast()
-	// return _editRecursiveSlow()
 }
 
 func _editRecursiveFast() error {
@@ -171,22 +170,4 @@ func _bytesToFile(editedFileBytes *[]byte, newFile *os.File) error {
 	}
 
 	return newFile.Sync()
-}
-
-func _editRecursiveSlow() error {
-	return filepath.Walk(SrcDir, _walkReplace)
-}
-
-func _walkReplace(path string, fi os.FileInfo, err error) error {
-
-	if err != nil {
-		return err
-	}
-
-	if !isEditable(fi) {
-		return nil
-	}
-
-	err, _ = _editSvg(path)
-	return err
 }
