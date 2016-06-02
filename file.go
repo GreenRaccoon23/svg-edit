@@ -20,11 +20,11 @@ func getPwd() string {
 	return pwd
 }
 
-func mkDir(dir string) error {
-	if _pathExists(dir) {
+func mkDir(path string) error {
+	if _pathExists(path) {
 		return nil
 	}
-	return os.MkdirAll(dir, 0777)
+	return os.MkdirAll(path, 0777)
 }
 
 func _pathExists(path string) bool {
