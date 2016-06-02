@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"log"
+	"path/filepath"
 	"strings"
 )
 
@@ -44,45 +46,12 @@ func addExt(path string, ext string) string {
 
 func fmtDir(dir string) string {
 
-	if dir == "" {
-		return ""
-	}
-
-	formatted := dir
-
-	if !_isFirstChar(dir, "/", "~") {
-		formatted = concat(Pwd, "/", dir)
-	}
-
-	if !_isLastChar(dir, "/") {
-		formatted = concat(formatted, "/")
-	}
-
-	if dir == "." || dir == "./" {
-		formatted = Pwd
+	formatted, err := filepath.Abs(dir)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	return formatted
-}
-
-func _isFirstChar(s string, args ...string) bool {
-	firstChar := string(s[0])
-	for _, a := range args {
-		if firstChar == a {
-			return true
-		}
-	}
-	return false
-}
-
-func _isLastChar(s string, args ...string) bool {
-	lastChar := string(s[len(s)-1])
-	for _, z := range args {
-		if lastChar == z {
-			return true
-		}
-	}
-	return false
 }
 
 // func fmtCopy(s string) string {
