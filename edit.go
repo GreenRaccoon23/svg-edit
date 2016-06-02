@@ -19,21 +19,27 @@ func editOne() error {
 		return fmt.Errorf("Cannot edit a symlink")
 	}
 
-	return editFileFromPath(DstSvg, SrcSvg)
+	err, _ := editFileFromPath(DstSvg, SrcSvg)
+	return err
 }
 
 func editRecursive() error {
-	return editRecursiveFast()
-	// return editRecursiveSlow()
+	return _editRecursiveFast()
+	// return _editRecursiveSlow()
 }
 
-func editRecursiveFast() error {
-
+func _editRecursiveFast() error {
 	svgPaths := getSvgPaths()
+	return _editSvgs(svgPaths)
+}
+
+func _editSvgs(svgPaths []string) error {
+
 	lenSvgPaths := len(svgPaths)
 
 	var wg sync.WaitGroup
 	wg.Add(lenSvgPaths)
+	chanEdited := make(chan bool, lenSvgPaths)
 
 	for i := 0; i < lenSvgPaths; i++ {
 		go func(i int) {
@@ -41,32 +47,42 @@ func editRecursiveFast() error {
 
 			svgPath := svgPaths[i]
 
-			err := _editSvg(svgPath)
+			err, wasEdited := _editSvg(svgPath)
 			if err != nil {
 				LogErr(err)
 			}
+
+			chanEdited <- wasEdited
 		}(i)
 	}
 
 	wg.Wait()
+	close(chanEdited)
+
+	for wasEdited := range chanEdited {
+		if wasEdited {
+			TotalEdited++
+		}
+	}
 
 	return nil
 }
 
-func _editSvg(svgPath string) error {
+func _editSvg(svgPath string) (error, bool) {
 
 	dstPath := fmtDst(svgPath)
 	if err := _mkDstDir(dstPath); err != nil {
-		return err
+		return err, false
 	}
 
 	srcPath := svgPath
 
-	if err := editFileFromPath(dstPath, srcPath); err != nil {
-		return err
+	err, wasEdited := editFileFromPath(dstPath, srcPath)
+	if err != nil {
+		return err, wasEdited
 	}
 
-	return nil
+	return nil, wasEdited
 }
 
 func _mkDstDir(dstPath string) error {
@@ -74,41 +90,42 @@ func _mkDstDir(dstPath string) error {
 	return mkDir(dstDir)
 }
 
-func editFileFromPath(dstPath string, srcPath string) error {
+func editFileFromPath(dstPath string, srcPath string) (error, bool) {
 
 	fileBytes, err := ioutil.ReadFile(srcPath)
 	if failedToReadFile := (err != nil); failedToReadFile {
 		LogErr(err)
-		return copyFromPath(dstPath, srcPath)
+		// return copyFromPath(dstPath, srcPath)
+		return nil, false
 	}
 
 	if isEmptyFile := (len(fileBytes) == 0); isEmptyFile {
-		return nil
+		return nil, false
 	}
 
 	var editedFileBytes []byte
 	if wasEdited := _editFileBytes(&fileBytes, &editedFileBytes); !wasEdited {
-		return nil
+		return nil, false
 	}
 
 	if somethingTerribleHappened := (len(editedFileBytes) == 0); somethingTerribleHappened {
-		return nil
+		return nil, false
 	}
 
 	newFile, err := os.Create(dstPath)
 	if err != nil {
-		return err
+		return err, false
 	}
 	defer newFile.Close()
 
 	if err = _bytesToFile(&editedFileBytes, newFile); err != nil {
-		return err
+		return err, false
 	}
 
-	TotalEdited++
+	// TotalEdited++
 	Log(dstPath)
 
-	return nil
+	return nil, true
 }
 
 func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
@@ -156,7 +173,7 @@ func _bytesToFile(editedFileBytes *[]byte, newFile *os.File) error {
 	return newFile.Sync()
 }
 
-func editRecursiveSlow() error {
+func _editRecursiveSlow() error {
 	return filepath.Walk(SrcDir, _walkReplace)
 }
 
@@ -170,5 +187,6 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 		return nil
 	}
 
-	return _editSvg(path)
+	err, _ = _editSvg(path)
+	return err
 }
