@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -12,6 +13,11 @@ func editRecursive() error {
 }
 
 func editOne() error {
+
+	if isPathSymlink(SrcSvg) {
+		return fmt.Errorf("Cannot edit a symlink")
+	}
+
 	return editFileFromPath(DstSvg, SrcSvg)
 }
 
@@ -22,6 +28,11 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 	}
 
 	if filepath.Ext(path) != ".svg" {
+		return nil
+	}
+
+	if isPathSymlink(path) {
+		// return copySymlinkFromPath(dstPath, srcPath)
 		return nil
 	}
 
@@ -47,11 +58,6 @@ func _mkDstDir(dstPath string) error {
 }
 
 func editFileFromPath(dstPath string, srcPath string) error {
-
-	if isPathSymlink(srcPath) {
-		// return copySymlinkFromPath(dstPath, srcPath)
-		return nil
-	}
 
 	fileBytes, err := ioutil.ReadFile(srcPath)
 	if failedToReadFile := (err != nil); failedToReadFile {
