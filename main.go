@@ -59,6 +59,7 @@ func init() {
 	}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+	_setLogger()
 	_setSrcDst()
 	_setFindReplace()
 
@@ -80,6 +81,12 @@ func main() {
 	}
 
 	report()
+}
+
+func _setLogger() {
+	if DoShutUp || DoQuiet {
+		Log = LogNoop
+	}
 }
 
 func _setFindReplace() {

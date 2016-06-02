@@ -20,13 +20,12 @@ var (
 	BMagenta = color.New(color.FgMagenta, color.Bold)
 	BWhite   = color.New(color.Bold, color.FgWhite)
 	BBlack   = color.New(color.Bold, color.FgBlack)
+
+	Log = fmt.Println
 )
 
-func Log(output ...interface{}) {
-	if DoShutUp || DoQuiet {
-		return
-	}
-	fmt.Println(output...)
+func LogNoop(x ...interface{}) (int, error) {
+	return 0, nil
 }
 
 func LogErr(err error) {
