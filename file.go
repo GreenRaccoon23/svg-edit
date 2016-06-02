@@ -45,14 +45,14 @@ func walkReplace(path string, fi os.FileInfo, err error) error {
 
 	dstPath := fmtDst(path)
 	if err = _mkDstDir(dstPath); err != nil {
-		Log(err)
+		LogErr(err)
 		return nil
 	}
 
 	srcPath := path
 
 	if err = editFileFromPath(dstPath, srcPath); err != nil {
-		Log(err)
+		LogErr(err)
 		return nil
 	}
 
@@ -63,7 +63,7 @@ func _isPathSymlink(path string) bool {
 
 	fi, err := os.Lstat(path)
 	if err != nil {
-		Log(err)
+		LogErr(err)
 		return false
 	}
 
@@ -89,7 +89,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 			return err
 		}
 
-		Log(err)
+		LogErr(err)
 		return _copyFromPath(dstPath, srcPath)
 	}
 
