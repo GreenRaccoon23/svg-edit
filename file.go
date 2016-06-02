@@ -134,16 +134,6 @@ func editFileFromPath(dstPath string, srcPath string) error {
 //  return _copyFromPath(dstPath, srcPath)
 // }
 
-func _stringToFile(editedFileContent *string, newFile *os.File) error {
-
-	b := []byte(*editedFileContent)
-	if _, err := newFile.Write(b); err != nil {
-		return err
-	}
-
-	return newFile.Sync()
-}
-
 func _copyFromPath(dstPath string, srcPath string) error {
 
 	src, err := os.Open(srcPath)
@@ -179,6 +169,16 @@ func _fileToString(path string, fileContent *string) error {
 
 	*fileContent = string(fileBytes)
 	return nil
+}
+
+func _stringToFile(editedFileContent *string, newFile *os.File) error {
+
+	b := []byte(*editedFileContent)
+	if _, err := newFile.Write(b); err != nil {
+		return err
+	}
+
+	return newFile.Sync()
 }
 
 func _replace(fileContent *string, fileContentEdited *string) {
