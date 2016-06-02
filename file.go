@@ -183,7 +183,8 @@ func _fileToString(path string, fileContent *string) error {
 
 func _replace(fileContent *string, fileContentEdited *string) {
 
-	*fileContentEdited = strings.Replace(*fileContent, ToFind, ToReplace, -1)
+	// *fileContentEdited = strings.Replace(*fileContent, ToFind, ToReplace, -1)
+	*fileContentEdited = ReToFind.ReplaceAllString(*fileContent, ToReplace)
 
 	if wasEdited := (*fileContentEdited != *fileContent); wasEdited {
 		return
