@@ -143,27 +143,6 @@ func _copyFile(dst *os.File, src *os.File) error {
 	return dst.Sync()
 }
 
-func _fileToString(path string, fileContent *string) error {
-
-	fileBytes, err := ioutil.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	*fileContent = string(fileBytes)
-	return nil
-}
-
-func _stringToFile(editedFileContent *string, newFile *os.File) error {
-
-	b := []byte(*editedFileContent)
-	if _, err := newFile.Write(b); err != nil {
-		return err
-	}
-
-	return newFile.Sync()
-}
-
 func _editFileBytes(fileBytes *[]byte, editedFileBytes *[]byte) (wasEdited bool) {
 
 	wasEdited = _replace(editedFileBytes, fileBytes)
