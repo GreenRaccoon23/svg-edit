@@ -38,11 +38,11 @@ func fmtDir(dir string) string {
 
 	formatted := dir
 
-	if isFirstChar(dir, "/", "~") == false {
+	if !_isFirstChar(dir, "/", "~") {
 		formatted = concat(Pwd, "/", dir)
 	}
 
-	if isLastChar(dir, "/") == false {
+	if !_isLastChar(dir, "/") {
 		formatted = concat(formatted, "/")
 	}
 
@@ -53,7 +53,7 @@ func fmtDir(dir string) string {
 	return formatted
 }
 
-func isFirstChar(s string, args ...string) bool {
+func _isFirstChar(s string, args ...string) bool {
 	firstChar := string(s[0])
 	for _, a := range args {
 		if firstChar == a {
@@ -63,7 +63,7 @@ func isFirstChar(s string, args ...string) bool {
 	return false
 }
 
-func isLastChar(s string, args ...string) bool {
+func _isLastChar(s string, args ...string) bool {
 	lastChar := string(s[len(s)-1])
 	for _, z := range args {
 		if lastChar == z {

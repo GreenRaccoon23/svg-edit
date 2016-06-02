@@ -94,7 +94,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 		return _copyFromPath(dstPath, srcPath)
 	}
 
-	editedFileContent := replace(fileContent)
+	editedFileContent := _replace(fileContent)
 	if editedFileContent == "" || editedFileContent == fileContent {
 		return nil
 	}
@@ -200,7 +200,7 @@ func _fileToString(fileName string) (string, error) {
     return
 }*/
 
-// func replace(fileContent string) string {
+// func _replace(fileContent string) string {
 
 //  re, replacement, needsToBeEdited := _getFindAndReplace(fileContent)
 //  if !needsToBeEdited {
@@ -224,7 +224,7 @@ func _fileToString(fileName string) (string, error) {
 //  return ReToFind, ToReplace, true
 // }
 
-func replace(fileContent string) string {
+func _replace(fileContent string) string {
 
 	replaced := strings.Replace(fileContent, ToFind, ToReplace, -1)
 
