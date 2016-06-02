@@ -117,25 +117,6 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	return nil
 }
 
-// func _copySymlinkFromPath(dstPath string, srcPath string) error {
-
-//  if SrcDstSame {
-//      return nil
-//  }
-
-//  linkTarget, err := os.Readlink(srcPath)
-//  if err != nil {
-//      return err
-//  }
-
-//  _, err = filepath.Rel(linkTarget, SrcDir)
-//  if isUnderSrcDir := (err == nil); !isUnderSrcDir {
-//      return nil
-//  }
-
-//  return _copyFromPath(dstPath, srcPath)
-// }
-
 func _copyFromPath(dstPath string, srcPath string) error {
 
 	src, err := os.Open(srcPath)
@@ -228,3 +209,22 @@ func _bytesToFile(editedFileBytes *[]byte, newFile *os.File) error {
 
 	return newFile.Sync()
 }
+
+// func _copySymlinkFromPath(dstPath string, srcPath string) error {
+
+//  if SrcDstSame {
+//      return nil
+//  }
+
+//  linkTarget, err := os.Readlink(srcPath)
+//  if err != nil {
+//      return err
+//  }
+
+//  _, err = filepath.Rel(linkTarget, SrcDir)
+//  if isUnderSrcDir := (err == nil); !isUnderSrcDir {
+//      return nil
+//  }
+
+//  return _copyFromPath(dstPath, srcPath)
+// }
