@@ -49,6 +49,8 @@ func _editSvgs(svgPaths []string) error {
 			err, wasEdited := _editSvg(svgPath)
 			if err != nil {
 				LogErr(err)
+			} else if wasEdited {
+				Log(svgPath)
 			}
 
 			chanEdited <- wasEdited
@@ -120,9 +122,6 @@ func editFileFromPath(dstPath string, srcPath string) (error, bool) {
 	if err = _bytesToFile(&editedFileBytes, newFile); err != nil {
 		return err, false
 	}
-
-	// TotalEdited++
-	Log(dstPath)
 
 	return nil, true
 }
