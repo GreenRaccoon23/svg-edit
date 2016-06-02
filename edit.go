@@ -170,18 +170,5 @@ func _walkReplace(path string, fi os.FileInfo, err error) error {
 		return nil
 	}
 
-	dstPath := fmtDst(path)
-	if err = _mkDstDir(dstPath); err != nil {
-		LogErr(err)
-		return nil
-	}
-
-	srcPath := path
-
-	if err = editFileFromPath(dstPath, srcPath); err != nil {
-		LogErr(err)
-		return nil
-	}
-
-	return nil
+	return _editSvg(path)
 }
