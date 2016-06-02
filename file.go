@@ -83,8 +83,8 @@ func editFileFromPath(dstPath string, srcPath string) error {
 		return nil
 	}
 
-	fileContent, err := _fileToString(srcPath)
-	if err != nil {
+	var fileContent string
+	if err := _fileToString(srcPath, &fileContent); err != nil {
 
 		if fileContent == "" {
 			return err
@@ -170,14 +170,15 @@ func _copyFile(dst *os.File, src *os.File) error {
 	return dst.Sync()
 }
 
-func _fileToString(fileName string) (string, error) {
+func _fileToString(path string, fileContent *string) error {
 
-	file, err := ioutil.ReadFile(fileName)
+	fileBytes, err := ioutil.ReadFile(path)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return string(file), nil
+	*fileContent = string(fileBytes)
+	return nil
 }
 
 /*func _copyFromPath(srcPath, dstPath string) error {
