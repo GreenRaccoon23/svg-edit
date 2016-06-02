@@ -25,7 +25,9 @@ func getSvgPaths() (svgPaths []string) {
 			return nil
 		}
 
-		svgPaths = append(svgPaths, path)
+		svgPath := fmtDst(path)
+		svgPaths = append(svgPaths, svgPath)
+
 		return nil
 	})
 

@@ -69,7 +69,7 @@ func _editSvgs(svgPaths []string) error {
 
 func _editSvg(svgPath string) (error, bool) {
 
-	dstPath := fmtDst(svgPath)
+	dstPath := svgPath
 	if err := _mkDstDir(dstPath); err != nil {
 		return err, false
 	}
