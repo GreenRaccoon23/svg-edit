@@ -94,7 +94,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 
 	var editedFileContent string
-	_replace(fileContent, &editedFileContent)
+	_replace(&fileContent, &editedFileContent)
 	if editedFileContent == "" || editedFileContent == fileContent {
 		return nil
 	}
@@ -105,7 +105,7 @@ func editFileFromPath(dstPath string, srcPath string) error {
 	}
 	defer newFile.Close()
 
-	if err = _stringToFile(editedFileContent, newFile); err != nil {
+	if err = _stringToFile(&editedFileContent, newFile); err != nil {
 		return err
 	}
 
@@ -134,14 +134,14 @@ func editFileFromPath(dstPath string, srcPath string) error {
 //  return _copyFromPath(dstPath, srcPath)
 // }
 
-func _stringToFile(s string, file *os.File) error {
+func _stringToFile(editedFileContent *string, newFile *os.File) error {
 
-	b := []byte(s)
-	if _, err := file.Write(b); err != nil {
+	b := []byte(*editedFileContent)
+	if _, err := newFile.Write(b); err != nil {
 		return err
 	}
 
-	return file.Sync()
+	return newFile.Sync()
 }
 
 func _copyFromPath(dstPath string, srcPath string) error {
@@ -181,11 +181,11 @@ func _fileToString(path string, fileContent *string) error {
 	return nil
 }
 
-func _replace(fileContent string, fileContentEdited *string) {
+func _replace(fileContent *string, fileContentEdited *string) {
 
-	*fileContentEdited = strings.Replace(fileContent, ToFind, ToReplace, -1)
+	*fileContentEdited = strings.Replace(*fileContent, ToFind, ToReplace, -1)
 
-	if wasEdited := (*fileContentEdited != fileContent); wasEdited {
+	if wasEdited := (*fileContentEdited != *fileContent); wasEdited {
 		return
 	}
 
@@ -193,12 +193,12 @@ func _replace(fileContent string, fileContentEdited *string) {
 		return
 	}
 
-	*fileContentEdited = ReAddNew.ReplaceAllString(fileContent, ToAdd)
+	*fileContentEdited = ReAddNew.ReplaceAllString(*fileContent, ToAdd)
 }
 
-func _hasFill(fileContent string) bool {
-	return strings.Contains(fileContent, "fill=") ||
-		strings.Contains(fileContent, "fill:")
+func _hasFill(fileContent *string) bool {
+	return strings.Contains(*fileContent, "fill=") ||
+		strings.Contains(*fileContent, "fill:")
 }
 
 // func _replace(fileContent string) string {
