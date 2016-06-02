@@ -98,10 +98,10 @@ func fmtDst(path string) (dstPath string) {
 	return
 }
 
-func pop(slc []string) (string, []string) {
-	iEnd := len(slc) - 1
-	return slc[iEnd], slc[:iEnd]
-}
+// func pop(slc []string) (string, []string) {
+// 	iEnd := len(slc) - 1
+// 	return slc[iEnd], slc[:iEnd]
+// }
 
 func cut(slc []string, i int, j int) []string {
 
@@ -122,10 +122,10 @@ func copySlc(slc []string) []string {
 	return newSlc
 }
 
-func shift(slc []string) (string, []string) {
-	return slc[0], slc[1:]
-}
+// func shift(slc []string) (string, []string) {
+// 	return slc[0], slc[1:]
+// }
 
-func unshift(slc []string, s string) []string {
-	return append([]string{s}, slc...)
-}
+// func unshift(slc []string, s string) []string {
+// 	return append([]string{s}, slc...)
+// }
