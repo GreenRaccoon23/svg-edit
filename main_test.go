@@ -106,21 +106,21 @@ func BenchmarkRegexpReplaceAddFillBytes(b *testing.B) {
 // }
 
 // func TestPrintMaterialPalette(t *testing.T) {
-// 	// showColor := true
-// 	showColor := false
-// 	// showM := true
-// 	showM := false
-// 	for color, m := range MaterialPalette {
-// 		if showColor {
-// 			t.Log(color)
+// 	// showGroupNames := true
+// 	showGroupNames := false
+// 	// showGroups := true
+// 	showGroups := false
+// 	for groupName, group := range MaterialPalette {
+// 		if showGroupNames {
+// 			t.Log(groupName)
 // 		}
-// 		if showM {
-// 			t.Log(m)
+// 		if showGroups {
+// 			t.Log(group)
 // 		}
 // 	}
 // }
 
-func TestMaterialSplit(t *testing.T) {
+func TestGetGroupNameShade(t *testing.T) {
 
 	slc := []string{
 		"deeporange50",
@@ -152,12 +152,11 @@ func TestMaterialSplit(t *testing.T) {
 
 	for _, s := range slc {
 
-		name, code, _ := getMaterialNameCode(s)
-		// if unchanged := (name == s || code == s); unchanged {
-		if unchanged := false; unchanged {
+		groupName, shade, wasFound := getGroupNameShade(s)
+		if !wasFound {
 			t.Log("false:", s)
 		} else {
-			t.Log("true:", name, " ", code)
+			t.Log("true:", groupName, " ", shade)
 		}
 	}
 }

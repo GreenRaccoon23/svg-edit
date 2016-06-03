@@ -46,18 +46,18 @@ func toMaterial(s string) string {
 }
 
 var (
-	ReNameCode *regexp.Regexp = regexp.MustCompile(`(?P<name>[A-Za-z]*?)+([:\-_\s]?)(?P<code>(A([1247])+00)|(50)|([1-9]00))+$`)
+	ReGroupNameShade *regexp.Regexp = regexp.MustCompile(`(?P<groupName>[A-Za-z]*?)+([:\-_\s]?)(?P<shade>(A([1247])+00)|(50)|([1-9]00))+$`)
 )
 
-func getMaterialNameCode(s string) (string, string, bool) {
+func getGroupNameShade(s string) (string, string, bool) {
 
-	name := ReNameCode.ReplaceAllString(s, "${name}")
-	code := ReNameCode.ReplaceAllString(s, "${code}")
-	if unchanged := (name == s || code == s); unchanged {
+	groupName := ReGroupNameShade.ReplaceAllString(s, "${groupName}")
+	shade := ReGroupNameShade.ReplaceAllString(s, "${shade}")
+	if unchanged := (groupName == s || shade == s); unchanged {
 		return s, s, false
 	}
 
-	return name, code, true
+	return groupName, shade, true
 }
 
 var (
