@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"path/filepath"
 	"regexp"
 
@@ -69,8 +68,8 @@ func init() {
 
 	_verifyGlobalVars()
 
-	_printFlags()
-	os.Exit(0)
+	// _printFlags()
+	// os.Exit(0)
 }
 
 func main() {
@@ -121,17 +120,12 @@ func _setSrcDst() {
 
 func _setFindReplace() {
 
-	// ToFind = toMaterial(ToFind)
-	// ToReplace = toMaterial(ToReplace)
-
-	hexToFind := getHex(ToFind)
-	if isHex := (hexToFind != ""); isHex {
-		ToFind = hexToFind
+	if hex := getHex(ToFind); hex != "" {
+		ToFind = hex
 	}
 
-	hexToReplace := getHex(ToReplace)
-	if isHex := (hexToReplace != ""); isHex {
-		ToFind = hexToReplace
+	if hex := getHex(ToReplace); hex != "" {
+		ToReplace = hex
 	}
 
 	ToFindBytes = []byte(ToFind)
