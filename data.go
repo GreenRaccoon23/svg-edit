@@ -45,28 +45,28 @@ func toMaterial(s string) string {
 	return s
 }
 
-func getHex(s string) (string, bool) {
+func getHex(s string) string {
 
 	cleaned := strings.ToLower(s)
 
 	group := MaterialPalette[cleaned]
 	if isColorAbbr := (group != nil); isColorAbbr {
-		return group[DefaultShade], true
+		return group[DefaultShade]
 	}
 
 	groupName, shade := getGroupNameShade(cleaned)
 
 	group = MaterialPalette[groupName]
 	if isGroup := (group != nil); !isGroup {
-		return "", false
+		return ""
 	}
 
 	hex := group[shade]
 	if isHex := (hex != ""); isHex {
-		return hex, true
+		return hex
 	}
 
-	return "", false
+	return ""
 }
 
 var (
