@@ -7,18 +7,21 @@ import (
 
 func getHex(s string) string {
 
-	cleaned := strings.ToLower(s)
-	if strings.HasSuffix(cleaned, "dark") {
-		trimmed := cleaned[0 : len(cleaned)-4]
-		cleaned = concat(trimmed, "900")
+	if s == "" {
+		return ""
 	}
 
-	group := MaterialPalette[cleaned]
+	colorName := _expandColorAbbr(s)
+	if isHex := (len(colorName) > 0 && string(colorName[0]) == "#"); isHex {
+		return colorName
+	}
+
+	group := MaterialPalette[colorName]
 	if isColorAbbr := (group != nil); isColorAbbr {
 		return group[DefaultShade]
 	}
 
-	groupName, shade := getGroupNameShade(cleaned)
+	groupName, shade := getGroupNameShade(colorName)
 
 	group = MaterialPalette[groupName]
 	if isGroup := (group != nil); !isGroup {
@@ -31,6 +34,30 @@ func getHex(s string) string {
 	}
 
 	return ""
+}
+
+var (
+	ColorAbbrs map[string]string = map[string]string{
+		"archblue":   "#1793D1",
+		"kellygreen": "greenA700",
+		"shamrock":   "greenA400",
+	}
+)
+
+func _expandColorAbbr(s string) string {
+
+	cleaned := strings.ToLower(s)
+
+	if color := ColorAbbrs[cleaned]; color != "" {
+		return color
+	}
+
+	if strings.HasSuffix(cleaned, "dark") {
+		trimmed := cleaned[0 : len(cleaned)-4]
+		return concat(trimmed, "900")
+	}
+
+	return cleaned
 }
 
 var (
@@ -357,6 +384,9 @@ var (
 			"700": "#455A64",
 			"800": "#37474F",
 			"900": "#263238",
+		},
+		"black": map[string]string{
+			"500": "#000000",
 		},
 	}
 )
