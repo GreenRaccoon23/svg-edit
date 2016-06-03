@@ -74,27 +74,6 @@ func (a *_argParser) _parseArgs() (extraArgs []string) {
 	return
 }
 
-func (a *_argParser) _setNoFlags() (extraArgs []string) {
-
-	argsNotFlagged := a._argsNotFlagged
-	lenArgsNotFlagged := len(argsNotFlagged)
-
-	noFlagVars := a.noFlagVars
-	lenNoFlagVars := len(noFlagVars)
-
-	iEnd := lenNoFlagVars - 1
-	if enoughArgs := (lenArgsNotFlagged > lenNoFlagVars); !enoughArgs {
-		iEnd = lenArgsNotFlagged - 1
-	}
-
-	for i := 0; i <= iEnd; i++ {
-		*noFlagVars[i] = argsNotFlagged[i]
-	}
-
-	extraArgs = cut(argsNotFlagged, iEnd+1, -1)
-	return
-}
-
 func (a *_argParser) _parseArg(arg string, i *int) bool {
 
 	if beginsWithHyphen := (string(arg[0]) == "-"); !beginsWithHyphen {
@@ -141,5 +120,26 @@ func (a *_argParser) _setStringFlag(argTrimmed string, i *int) (isStringFlag boo
 		*(a.stringFlagVars[argTrimmed]) = nextArg
 	}
 
+	return
+}
+
+func (a *_argParser) _setNoFlags() (extraArgs []string) {
+
+	argsNotFlagged := a._argsNotFlagged
+	lenArgsNotFlagged := len(argsNotFlagged)
+
+	noFlagVars := a.noFlagVars
+	lenNoFlagVars := len(noFlagVars)
+
+	iEnd := lenNoFlagVars - 1
+	if enoughArgs := (lenArgsNotFlagged > lenNoFlagVars); !enoughArgs {
+		iEnd = lenArgsNotFlagged - 1
+	}
+
+	for i := 0; i <= iEnd; i++ {
+		*noFlagVars[i] = argsNotFlagged[i]
+	}
+
+	extraArgs = cut(argsNotFlagged, iEnd+1, -1)
 	return
 }
