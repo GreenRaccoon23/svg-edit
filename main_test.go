@@ -104,3 +104,60 @@ func BenchmarkRegexpReplaceAddFillBytes(b *testing.B) {
 // 		re.ReplaceAllString("--abc123doremi", "${2}")
 // 	}
 // }
+
+// func TestPrintMaterialPalette(t *testing.T) {
+// 	// showColor := true
+// 	showColor := false
+// 	// showM := true
+// 	showM := false
+// 	for color, m := range MaterialPalette {
+// 		if showColor {
+// 			t.Log(color)
+// 		}
+// 		if showM {
+// 			t.Log(m)
+// 		}
+// 	}
+// }
+
+func TestMaterialSplit(t *testing.T) {
+
+	slc := []string{
+		"deeporange50",
+		"deeporange500",
+		"deeporange900",
+		"deeporangeA100",
+		"deeporangeA200",
+		"deeporangeA400",
+		"deeporangeA700",
+		"deeporange-50",
+		"deeporange:500",
+		"deeporange_900",
+		"deeporange A100",
+		"deeporange-A200",
+		"deeporange:A400",
+		"deeporange_A700",
+		"deeporange000",
+		"deeporange1000",
+		"deeporangeA000",
+		"deeporangeA300",
+		"deeporangeA1000",
+		"deeporange:000",
+		"deeporange-1000",
+		"deeporange_A000",
+		"deeporange A300",
+		"deeporange-A1000",
+		"deeporange",
+	}
+
+	for _, s := range slc {
+
+		name, code, _ := getMaterialNameCode(s)
+		// if unchanged := (name == s || code == s); unchanged {
+		if unchanged := false; unchanged {
+			t.Log("false:", s)
+		} else {
+			t.Log("true:", name, " ", code)
+		}
+	}
+}
