@@ -38,7 +38,7 @@ func toMaterial(s string) string {
 	cleaned := strings.ToLower(s)
 	hex := MaterialDesign[cleaned]
 
-	if isColorAbbr := (hex != ""); isColorAbbr {
+	if isColorName := (hex != ""); isColorName {
 		return hex
 	}
 
