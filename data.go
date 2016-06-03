@@ -45,16 +45,6 @@ func toMaterial(s string) string {
 	return s
 }
 
-var (
-	ReGroupNameShade *regexp.Regexp = regexp.MustCompile(`(?P<groupName>[A-Za-z]*?)+([:\-_\s]?)(?P<shade>(A([1247])+00)|(50)|([1-9]00))+$`)
-)
-
-func getGroupNameShade(s string) (string, string) {
-	groupName := ReGroupNameShade.ReplaceAllString(s, "${groupName}")
-	shade := ReGroupNameShade.ReplaceAllString(s, "${shade}")
-	return groupName, shade
-}
-
 func getHex(s string) string {
 
 	cleaned := strings.ToLower(s)
@@ -77,6 +67,16 @@ func getHex(s string) string {
 	}
 
 	return ""
+}
+
+var (
+	ReGroupNameShade *regexp.Regexp = regexp.MustCompile(`(?P<groupName>[A-Za-z]*?)+([:\-_\s]?)(?P<shade>(A([1247])+00)|(50)|([1-9]00))+$`)
+)
+
+func getGroupNameShade(s string) (string, string) {
+	groupName := ReGroupNameShade.ReplaceAllString(s, "${groupName}")
+	shade := ReGroupNameShade.ReplaceAllString(s, "${shade}")
+	return groupName, shade
 }
 
 var (
