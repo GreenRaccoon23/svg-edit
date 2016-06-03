@@ -85,3 +85,23 @@ func copySlc(slc []string) []string {
 // func unshift(slc []string, s string) []string {
 // 	return append([]string{s}, slc...)
 // }
+
+func slcContains(slc []string, s string) bool {
+	lenSlc := len(slc)
+	for i := 0; i < lenSlc; i++ {
+		if slc[i] == s {
+			return true
+		}
+	}
+	return false
+}
+
+func slcIsEmpty(slc []string) bool {
+	lenSlc := len(slc)
+	for i := 0; i < lenSlc; i++ {
+		if slc[i] != "" {
+			return false
+		}
+	}
+	return true
+}
