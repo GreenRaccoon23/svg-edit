@@ -53,6 +53,6 @@ func printHelp() {
     -q=false:
              (quiet) don't list edited files
     -Q=false:
-             (QUIET) don't show any output`,
+             (QUIET) don't show any output%v`, "\n",
 	)
 }
