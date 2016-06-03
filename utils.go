@@ -105,3 +105,13 @@ func slcIsEmpty(slc []string) bool {
 	}
 	return true
 }
+
+func slcCompact(slc []string) (compacted []string) {
+	lenSlc := len(slc)
+	for i := 0; i < lenSlc; i++ {
+		if s := slc[i]; s != "" {
+			compacted = append(compacted, s)
+		}
+	}
+	return
+}
