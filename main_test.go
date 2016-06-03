@@ -129,7 +129,7 @@ func TestGetGroupNameShade(t *testing.T) {
 		"deeporangeA100",
 		"deeporangeA200",
 		"deeporangeA400",
-		"deeporangeA700",
+		"deeporangea700",
 		"deeporange-50",
 		"deeporange:500",
 		"deeporange_900",
@@ -153,7 +153,7 @@ func TestGetGroupNameShade(t *testing.T) {
 	for _, s := range slc {
 
 		groupName, shade := getGroupNameShade(s)
-		if wasFound := (groupName == s || shade == s); !wasFound {
+		if wasFound := (groupName != s && shade != s && groupName != "" && shade != ""); !wasFound {
 			t.Log("false:", s)
 		} else {
 			t.Log("true:", groupName, " ", shade)
