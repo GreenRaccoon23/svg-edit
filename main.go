@@ -66,7 +66,9 @@ func init() {
 	_setSrcDst()
 	_setFindReplace()
 
-	_verifyGlobalVars()
+	if err := _verifyGlobalVars(); err != nil {
+		log.Fatal(err)
+	}
 
 	// _printFlags()
 	// os.Exit(0)
