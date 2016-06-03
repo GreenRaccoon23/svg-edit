@@ -111,6 +111,9 @@ func _setSrcDst() {
 		SrcDstSame = (SrcDir == DstDir)
 
 	case false:
+		SrcSvg = SrcFileOrDir
+		DstSvg = DstFileOrDir
+
 		SrcDstSame = (SrcSvg == DstSvg)
 
 		SrcDir = filepath.Dir(SrcSvg)
