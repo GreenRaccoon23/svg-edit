@@ -51,7 +51,7 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		`svg-edit <options> <original file/directory> <new file/directory>
+		`svg-edit [options] <original file/directory> <new file/directory>
     -o="":
              (old) string in svg file to replace
     -n="":
