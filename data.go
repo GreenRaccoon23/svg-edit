@@ -49,39 +49,34 @@ var (
 	ReGroupNameShade *regexp.Regexp = regexp.MustCompile(`(?P<groupName>[A-Za-z]*?)+([:\-_\s]?)(?P<shade>(A([1247])+00)|(50)|([1-9]00))+$`)
 )
 
-func getGroupNameShade(s string) (string, string, bool) {
-
+func getGroupNameShade(s string) (string, string) {
 	groupName := ReGroupNameShade.ReplaceAllString(s, "${groupName}")
 	shade := ReGroupNameShade.ReplaceAllString(s, "${shade}")
-	if unchanged := (groupName == s || shade == s); unchanged {
-		return s, s, false
-	}
-
-	return groupName, shade, true
+	return groupName, shade
 }
 
-func getHex(s string) (string, bool) {
+func getHex(s string) string {
 
 	cleaned := strings.ToLower(s)
 
 	group := MaterialPalette[cleaned]
 	if isColorAbbr := (group != nil); isColorAbbr {
-		return group[DefaultShade], true
+		return group[DefaultShade]
 	}
 
-	groupName, shade, _ := getGroupNameShade(cleaned)
+	groupName, shade := getGroupNameShade(cleaned)
 
 	group = MaterialPalette[groupName]
 	if isGroup := (group != nil); !isGroup {
-		return s, false
+		return ""
 	}
 
 	hex := group[shade]
 	if isHex := (hex != ""); isHex {
-		return hex, true
+		return hex
 	}
 
-	return s, false
+	return ""
 }
 
 var (

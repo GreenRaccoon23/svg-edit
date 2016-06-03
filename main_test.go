@@ -152,8 +152,8 @@ func TestGetGroupNameShade(t *testing.T) {
 
 	for _, s := range slc {
 
-		groupName, shade, wasFound := getGroupNameShade(s)
-		if !wasFound {
+		groupName, shade := getGroupNameShade(s)
+		if wasFound := (groupName == s || shade == s); !wasFound {
 			t.Log("false:", s)
 		} else {
 			t.Log("true:", groupName, " ", shade)
