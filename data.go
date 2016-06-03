@@ -60,7 +60,32 @@ func getGroupNameShade(s string) (string, string, bool) {
 	return groupName, shade, true
 }
 
+func getHex(s string) (string, bool) {
+
+	cleaned := strings.ToLower(s)
+
+	group := MaterialPalette[cleaned]
+	if isColorAbbr := (group != nil); isColorAbbr {
+		return group[DefaultShade], true
+	}
+
+	groupName, shade, _ := getGroupNameShade(cleaned)
+
+	group = MaterialPalette[groupName]
+	if isGroup := (group != nil); !isGroup {
+		return s, false
+	}
+
+	hex := group[shade]
+	if isHex := (hex != ""); isHex {
+		return hex, true
+	}
+
+	return s, false
+}
+
 var (
+	DefaultShade    string                       = "500"
 	MaterialPalette map[string]map[string]string = map[string]map[string]string{
 		"red": map[string]string{
 			// "500":  "#F44336",
