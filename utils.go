@@ -125,3 +125,19 @@ func isEmpty(args ...string) bool {
 	}
 	return true
 }
+
+func filter(unfiltered []string, unwanted ...string) (filtered []string) {
+
+	lenUnfiltered := len(unfiltered)
+	for i := 0; i < lenUnfiltered; i++ {
+		s := unfiltered[i]
+
+		if isUnwanted := slcContains(unwanted, s); isUnwanted {
+			continue
+		}
+
+		filtered = append(filtered, s)
+	}
+
+	return
+}
