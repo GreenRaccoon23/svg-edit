@@ -8,6 +8,10 @@ import (
 func getHex(s string) string {
 
 	cleaned := strings.ToLower(s)
+	if strings.HasSuffix(cleaned, "dark") {
+		trimmed := cleaned[0 : len(cleaned)-4]
+		cleaned = concat(trimmed, "900")
+	}
 
 	group := MaterialPalette[cleaned]
 	if isColorAbbr := (group != nil); isColorAbbr {
@@ -40,7 +44,8 @@ func getGroupNameShade(s string) (string, string) {
 }
 
 var (
-	DefaultShade    string                       = "500"
+	DefaultShade string = "500"
+
 	MaterialPalette map[string]map[string]string = map[string]map[string]string{
 		"red": map[string]string{
 			// "500":  "#F44336",
