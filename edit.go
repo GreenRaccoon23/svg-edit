@@ -20,6 +20,9 @@ func editOne() error {
 	}
 
 	err, _ := editFileFromPath(DstSvg, SrcSvg)
+	if err == nil {
+		TotalEdited++
+	}
 	return err
 }
 

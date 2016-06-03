@@ -30,10 +30,22 @@ func LogNoop(x ...interface{}) (int, error) {
 }
 
 func report() {
+
 	if DoShutUp {
 		return
 	}
-	fmt.Printf("Edited %d svg images in %v\n", TotalEdited, DstDir)
+
+	if DoRecursive {
+		fmt.Printf("Edited %d svg images in %v\n", TotalEdited, DstDir)
+		return
+	}
+
+	if TotalEdited == 0 {
+		fmt.Printf("Failed to edit %v\n", DstSvg)
+		return
+	}
+
+	fmt.Printf("Successfully edited %v\n", DstSvg)
 }
 
 func printHelp() {
