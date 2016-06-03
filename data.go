@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 var (
 	MaterialDesign map[string]string = map[string]string{
@@ -40,6 +43,21 @@ func toMaterial(s string) string {
 	}
 
 	return s
+}
+
+var (
+	ReNameCode *regexp.Regexp = regexp.MustCompile(`(?P<name>[A-Za-z]*?)+([:\-_\s]?)(?P<code>(A([1247])+00)|(50)|([1-9]00))+$`)
+)
+
+func getMaterialNameCode(s string) (string, string, bool) {
+
+	name := ReNameCode.ReplaceAllString(s, "${name}")
+	code := ReNameCode.ReplaceAllString(s, "${code}")
+	if unchanged := (name == s || code == s); unchanged {
+		return s, s, false
+	}
+
+	return name, code, true
 }
 
 var (
