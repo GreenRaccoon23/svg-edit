@@ -141,3 +141,17 @@ func filter(unfiltered []string, unwanted ...string) (filtered []string) {
 
 	return
 }
+
+func extract(excess []string, wanted ...string) (extracted []string) {
+
+	lenExcess := len(excess)
+	for i := 0; i < lenExcess; i++ {
+		s := excess[i]
+
+		if isWanted := slcContains(wanted, s); isWanted {
+			extracted = append(extracted, s)
+		}
+	}
+
+	return
+}
