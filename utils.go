@@ -115,3 +115,13 @@ func slcCompact(slc []string) (compacted []string) {
 	}
 	return
 }
+
+func isEmpty(args ...string) bool {
+	lenArgs := len(args)
+	for i := 0; i < lenArgs; i++ {
+		if notEmpty := args[i] != ""; notEmpty {
+			return false
+		}
+	}
+	return true
+}
