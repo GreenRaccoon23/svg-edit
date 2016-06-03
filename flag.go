@@ -131,15 +131,15 @@ func (a *_argParser) _setNoFlags() (extraArgs []string) {
 	noFlagVars := a.noFlagVars
 	lenNoFlagVars := len(noFlagVars)
 
-	iEnd := lenNoFlagVars - 1
+	iMax := lenNoFlagVars
 	if enoughArgs := (lenArgsNotFlagged > lenNoFlagVars); !enoughArgs {
-		iEnd = lenArgsNotFlagged - 1
+		iMax = lenArgsNotFlagged
 	}
 
-	for i := 0; i <= iEnd; i++ {
+	for i := 0; i < iMax; i++ {
 		*noFlagVars[i] = argsNotFlagged[i]
 	}
 
-	extraArgs = cut(argsNotFlagged, iEnd+1, -1)
+	extraArgs = cut(argsNotFlagged, iMax, -1)
 	return
 }
