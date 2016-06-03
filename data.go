@@ -21,7 +21,7 @@ func getHex(s string) string {
 		return group[DefaultShade]
 	}
 
-	groupName, shade := getGroupNameShade(colorName)
+	groupName, shade := _getGroupNameShade(colorName)
 
 	group = MaterialPalette[groupName]
 	if isGroup := (group != nil); !isGroup {
@@ -64,7 +64,7 @@ var (
 	ReGroupNameShade *regexp.Regexp = regexp.MustCompile(`(?P<groupName>[A-Za-z]*?)+([:\-_\s]?)(?P<shade>(A([1247])+00)|(50)|([1-9]00))+$`)
 )
 
-func getGroupNameShade(s string) (string, string) {
+func _getGroupNameShade(s string) (string, string) {
 	groupName := ReGroupNameShade.ReplaceAllString(s, "${groupName}")
 	shade := ReGroupNameShade.ReplaceAllString(s, "${shade}")
 	return groupName, shade
