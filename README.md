@@ -38,3 +38,6 @@ Examples:
     greendark => #1B5E20
     green-dark => #1B5E20
     green:dark => #1B5E20
+
+    green100 => #C8E6C9
+    greenlight => #C8E6C9
