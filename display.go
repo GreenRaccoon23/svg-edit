@@ -25,6 +25,27 @@ var (
 	LogErr = fmt.Println
 )
 
+func printHelp() {
+	defer os.Exit(0)
+	fmt.Printf(
+		`svg-edit [options] <original file/directory> <new file/directory>
+    -o="":
+             (old) string in svg file to replace
+    -n="":
+             (new) string to replace old string with
+    -a=false:
+             (add) add fill color of 'new string' for files without one
+    -c=false:
+             (color) [same as '-a']
+    -r=false:
+             (recursive) edit svg files beneath the specified folder
+    -q=false:
+             (quiet) don't list edited files
+    -Q=false:
+             (QUIET) don't show any output%v`, "\n",
+	)
+}
+
 func LogNoop(x ...interface{}) (int, error) {
 	return 0, nil
 }
@@ -46,25 +67,4 @@ func report() {
 	}
 
 	fmt.Printf("Successfully edited %v\n", DstSvg)
-}
-
-func printHelp() {
-	defer os.Exit(0)
-	fmt.Printf(
-		`svg-edit [options] <original file/directory> <new file/directory>
-    -o="":
-             (old) string in svg file to replace
-    -n="":
-             (new) string to replace old string with
-    -a=false:
-             (add) add fill color of 'new string' for files without one
-    -c=false:
-             (color) [same as '-a']
-    -r=false:
-             (recursive) edit svg files beneath the specified folder
-    -q=false:
-             (quiet) don't list edited files
-    -Q=false:
-             (QUIET) don't show any output%v`, "\n",
-	)
 }

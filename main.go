@@ -62,13 +62,10 @@ func init() {
 	}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+
 	_setLogger()
 	_setSrcDst()
 	_setFindReplace()
-
-	if err := _verifyGlobalVars(); err != nil {
-		log.Fatal(err)
-	}
 
 	// _printFlags()
 	// os.Exit(0)
@@ -76,6 +73,10 @@ func init() {
 
 func main() {
 	defer color.Unset()
+
+	if err := _verifyGlobalVars(); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := mkDir(DstDir); err != nil {
 		log.Fatal(err)
