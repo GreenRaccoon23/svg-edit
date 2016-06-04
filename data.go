@@ -42,6 +42,11 @@ var (
 		"kellygreen": "greenA700",
 		"shamrock":   "greenA400",
 	}
+
+	ShadeAbbrs map[string]string = map[string]string{
+		"dark":  "900",
+		"light": "100",
+	}
 )
 
 func _expandColorAbbr(s string) string {
@@ -52,9 +57,13 @@ func _expandColorAbbr(s string) string {
 		return color
 	}
 
-	if strings.HasSuffix(cleaned, "dark") {
-		trimmed := cleaned[0 : len(cleaned)-4]
-		return concat(trimmed, "900")
+	for abbr, shade := range ShadeAbbrs {
+
+		if hasAbbr := strings.HasSuffix(cleaned, abbr); hasAbbr {
+			trimmed := strings.TrimSuffix(cleaned, abbr)
+			return concat(trimmed, shade)
+		}
+
 	}
 
 	return cleaned
