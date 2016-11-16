@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"regexp"
 
@@ -41,6 +42,15 @@ var (
 )
 
 func init() {
+
+	if justPrintHex := (len(os.Args) == 2); justPrintHex {
+		if hex := getHex(os.Args[1]); hex != "" {
+			fmt.Println(hex[1:])
+			os.Exit(0)
+		} else {
+			printHelp()
+		}
+	}
 
 	boolFlagVars := map[string]*bool{
 		"r": &DoRecursive,

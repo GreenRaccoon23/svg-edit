@@ -38,13 +38,17 @@ func _editRecursiveFast() error {
 func _editSvgs(svgPaths []string) error {
 
 	lenSvgPaths := len(svgPaths)
+	semaphoreSize := 1000
 
 	var wg sync.WaitGroup
 	wg.Add(lenSvgPaths)
 	chanEdited := make(chan bool, lenSvgPaths)
+	semaphore := make(chan bool, semaphoreSize)
 
 	for i := 0; i < lenSvgPaths; i++ {
+		semaphore <- true
 		go func(i int) {
+			defer func() { <-semaphore }()
 			defer wg.Done()
 
 			svgPath := svgPaths[i]
@@ -58,6 +62,10 @@ func _editSvgs(svgPaths []string) error {
 
 			chanEdited <- wasEdited
 		}(i)
+	}
+
+	for i := 0; i < cap(semaphore); i++ {
+		semaphore <- true
 	}
 
 	wg.Wait()
